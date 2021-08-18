@@ -36,6 +36,37 @@ test_connect_msg() {
     assertEquals "connect_msg" "$(connect_msg )" '{"t":1629312459, "host":"foo", "status": "connected" }'
 }
 
+# pull custom settings if provided
+read_custom_settings() {
+    if [ -e ./custom_settings ]
+    then
+    . ./custom_settings 
+    fi
+}
+
+test_custom_settings() {
+    test_dir=test$$
+    mkdir $test_dir
+    cd $test_dir
+cat <<EOF >./custom_settings
+broker() {
+    echo "mqttbroker"|tr -d '\n'    # use mqttbroker
+}
+
+connect_msg() {
+    echo "$(date +%s), foo, connected"|tr -d '\n'
+}
+EOF
+
+    read_custom_settings
+    assertEquals "broker" "$(broker )" "mqttbroker"
+    assertEquals "connect_msg" "$(connect_msg )" '1629312459, foo, connected'
+
+    # cleanup
+    cd ..
+    rm -rf $test_dir
+
+}
 # actual processing
 process() {
     echo "processing not yet implemented"
