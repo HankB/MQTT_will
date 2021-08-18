@@ -10,6 +10,26 @@ usage() {
     echo "$0 [-h|-?|-t"
 }
 
+# function to return broker hostname
+broker() {
+    echo "localhost"    # defauilt to localhost
+}
+
+# function to return connect message, seconds since epoch, hostname and status
+# JSON format
+# e.g. {"t":1629312351, "host":"olive", "status": "connected" }
+connect_msg() {
+    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connected\" }"|tr -d '\n'
+}
+
+test_connect_msg() {
+    date() { # mock shell date command
+        echo "1629312459"
+    }
+    HOSTNAME="foo"
+    assertEquals "connect_msg" "$(connect_msg )" '{"t":1629312459, "host":"foo", "status": "connected" }'
+}
+
 # actual processing
 process() {
     echo "processing not yet implemented"
