@@ -93,12 +93,17 @@ update_msg() {
     echo "$(date +%s), foo, still connected"|tr -d '\n'
 }
 
+will_msg() {
+    echo "$(date +%s), foo, gone"|tr -d '\n'
+}
+
 EOF
 
     read_custom_settings
     assertEquals "broker" "$(broker )" "mqttbroker"
     assertEquals "connect_msg" "$(connect_msg )" '1629312459, foo, connected'
     assertEquals "update_msg" "$(update_msg )" '1629312459, foo, still connected'
+    assertEquals "will_msg" "$(will_msg )" '1629312459, foo, gone'
 
     # cleanup
     cd ..
