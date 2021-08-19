@@ -38,7 +38,7 @@ test_connect_msg() {
 
 # function to return periodic status update message, seconds since epoch, hostname and status
 # JSON format
-# e.g. {"t":1629312351, "host":"olive", "status": "connected" }
+# e.g. {"t":1629312351, "host":"olive", "status": "still connected" }
 update_msg() {
     echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"still connected\" }"|tr -d '\n'
 }
