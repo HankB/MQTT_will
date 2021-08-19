@@ -51,6 +51,23 @@ test_update_msg() {
     assertEquals "update_msg" "$(update_msg )" '{"t":1629312459, "host":"foo", "status": "still connected" }'
 }
 
+# function to return lass will message, seconds since epoch, hostname and status
+# JSON format
+# Note: the "t" value will be the time the connection was established, now when it
+# has been detected that it has dropped.
+# e.g. {"t":1629312351, "host":"olive", "status": "connection dropped" }
+will_msg() {
+    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connection dropped\" }"|tr -d '\n'
+}
+
+test_will_msg() {
+    date() { # mock shell date command
+        echo "1629312459"
+    }
+    HOSTNAME="foo"
+    assertEquals "will_msg" "$(will_msg )" '{"t":1629312459, "host":"foo", "status": "connection dropped" }'
+}
+
 # pull custom settings if provided
 read_custom_settings() {
     if [ -e ./custom_settings ]
