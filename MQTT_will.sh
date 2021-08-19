@@ -71,11 +71,17 @@ broker() {
 connect_msg() {
     echo "$(date +%s), foo, connected"|tr -d '\n'
 }
+
+update_msg() {
+    echo "$(date +%s), foo, still connected"|tr -d '\n'
+}
+
 EOF
 
     read_custom_settings
     assertEquals "broker" "$(broker )" "mqttbroker"
     assertEquals "connect_msg" "$(connect_msg )" '1629312459, foo, connected'
+    assertEquals "update_msg" "$(update_msg )" '1629312459, foo, still connected'
 
     # cleanup
     cd ..
