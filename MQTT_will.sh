@@ -124,22 +124,42 @@ process() {
     echo "processing not yet implemented"
 }
 
+# default values for some things provided as command line args
+# exported to suppress shellcheck SC2034
+export broker="localhost"
+export interval=0
+
 # parse arguments and dispatch
-if [ $# -eq 0 ] # any args?
-then
-    process
-else
-    case $1 in
-        -h|-\?|--help)
-            usage
-            ;;
-        -t|--test)
-            shift
-            # shellcheck disable=SC1091 # this file isn't part of the project
-            . shunit2
-            ;;
-        *)
-            usage
-            ;;
-    esac
-fi
+parse_args() {
+    while [ $# -ne 0 ] # any args?
+    do
+        case $1 in
+            -h|-\?|--help)
+                usage
+                ;;
+            -t|--test)
+                shift
+                # shellcheck disable=SC1091 # this file isn't part of the project
+                . shunit2
+                ;;
+            -b|--broker)
+                shift
+                broker=$1
+                shift
+                ;;
+            -i|--interval)
+                shift
+                interval=$1
+                shift
+                ;;
+            *)
+                usage
+                ;;
+        esac
+    done
+}
+
+
+parse_args "$@"
+
+process
