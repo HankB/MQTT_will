@@ -159,6 +159,19 @@ parse_args() {
     done
 }
 
+test_parse_args() {
+    # first default values
+    assertEquals "broker" "$broker" "localhost"
+    assertEquals "interval" "$interval" 0
+    parse_args "-b" "mqtt1"
+    assertEquals "broker" "$broker" "mqtt1"
+    parse_args "--broker" "mqtt2"
+    assertEquals "broker" "$broker" "mqtt2"
+    parse_args "-i" 3
+    assertEquals "interval" "$interval" 3
+    parse_args "--interval" 5
+    assertEquals "interval" "$interval" 5
+}
 
 parse_args "$@"
 
