@@ -13,7 +13,7 @@ usage() {
 
 # function to return broker hostname
 broker() {
-    echo "localhost"|tr -d '\n'    # default to localhost
+    echo "localhost"|tr -d "\\n"    # default to localhost
 }
 
 test_broker() {
@@ -25,7 +25,7 @@ test_broker() {
 # JSON format
 # e.g. {"t":1629312351, "host":"olive", "status": "connected" }
 connect_msg() {
-    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connected\" }"|tr -d '\n'
+    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connected\" }"|tr -d "\\n"
 }
 
 test_connect_msg() {
@@ -40,7 +40,7 @@ test_connect_msg() {
 # JSON format
 # e.g. {"t":1629312351, "host":"olive", "status": "still connected" }
 update_msg() {
-    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"still connected\" }"|tr -d '\n'
+    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"still connected\" }"|tr -d "\\n"
 }
 
 test_update_msg() {
@@ -57,7 +57,7 @@ test_update_msg() {
 # has been detected that it has dropped.
 # e.g. {"t":1629312351, "host":"olive", "status": "connection dropped" }
 will_msg() {
-    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connection dropped\" }"|tr -d '\n'
+    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connection dropped\" }"|tr -d "\\n"
 }
 
 test_will_msg() {
@@ -72,6 +72,7 @@ test_will_msg() {
 read_custom_settings() {
     if [ -e ./custom_settings ]
     then
+    # shellcheck disable=SC1091 # this file isn't part of the project
     . ./custom_settings 
     fi
 }
@@ -81,20 +82,28 @@ test_custom_settings() {
     mkdir $test_dir
     cd $test_dir
 cat <<EOF >./custom_settings
+#!/usr/bin/env bash
+# Bash3 Boilerplate. Copyright (c) 2014, kvz.io
+
+set -o errexit
+set -o pipefail
+set -o nounset
+############### end of Boilerplate
+
 broker() {
-    echo "mqttbroker"|tr -d '\n'    # use mqttbroker
+    echo "mqttbroker"|tr -d "\\\\n"    # use mqttbroker
 }
 
 connect_msg() {
-    echo "$(date +%s), foo, connected"|tr -d '\n'
+    echo "$(date +%s), foo, connected"|tr -d "\\\\n"
 }
 
 update_msg() {
-    echo "$(date +%s), foo, still connected"|tr -d '\n'
+    echo "$(date +%s), foo, still connected"|tr -d "\\\\n"
 }
 
 will_msg() {
-    echo "$(date +%s), foo, gone"|tr -d '\n'
+    echo "$(date +%s), foo, gone"|tr -d "\\\\n"
 }
 
 EOF
@@ -126,6 +135,7 @@ else
             ;;
         -t|--test)
             shift
+            # shellcheck disable=SC1091 # this file isn't part of the project
             . shunit2
             ;;
         *)
