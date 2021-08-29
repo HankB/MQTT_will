@@ -8,7 +8,7 @@ set -o nounset
 
 . ./MQTT_will.sh -t 
 
-####() {
+test_connect_msg() {
     date() { # mock shell date command
         echo "1629312459"
     }
