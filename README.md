@@ -13,3 +13,20 @@ Some work to prove the capability was done in this project <https://github.com/H
 * custom messages for startup, update and will.
 * run using systemd
 * options for repeat interval and host for MQTT broker.
+
+## Testing
+
+Using  `shellcheck` as a `bash` linter. Unit tests using `shunit12`. To run all unit tests
+
+
+```text
+./MQTT_will.sh -t
+```
+
+Seems not possible at present to run selected tests with this structure (tests in same file as the code under test.)
+
+## TODO
+
+* split out testing into a separate file(s)
+* Decide what to do about topic. Function like broker, connect_msg etc?
+* implement some processing tests.
