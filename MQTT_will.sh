@@ -8,7 +8,7 @@ set -o nounset
 
 # usage ...
 usage() {
-    echo "$0 [-h|-?|-t"
+    echo "$0 [-h|-?|-t|[-b broker -i interval ]"
 }
 
 # function to return broker hostname
@@ -119,9 +119,44 @@ EOF
     rm -rf $test_dir
 
 }
+
 # actual processing
 process() {
-    echo "processing not yet implemented"
+    (
+        echo $(connect_msg); \
+        while(:)
+        do
+            if [ $interval -ne 0 ]
+            then
+                sleep $interval
+                echo $(update_msg)
+            else
+                while true
+                do 
+                    sleep 86400; 
+                done; 
+            fi
+        done 
+    ) | \
+    mosquitto_pub   -t TEST \
+                    -h localhost \
+                    --will-payload \"$(will_msg)\" \
+                    --will-topic \"TEST/will\" -l
+}
+
+# mock mosquitto_pub and sleep for test purposes
+
+# test argument passing
+test_process_args() {
+    mosquitto_pub() {
+        cat
+        echo $*
+    }
+    sleep() {
+        echo sleeping $1
+        exit
+    }
+    process
 }
 
 # default values for some things provided as command line args
