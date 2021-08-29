@@ -171,6 +171,7 @@ parse_args() {
         case $1 in
             -h|-\?|--help)
                 usage
+                shift
                 ;;
             -t|--test)
                 shift
@@ -189,6 +190,7 @@ parse_args() {
                 ;;
             *)
                 usage
+                shift
                 ;;
         esac
     done
