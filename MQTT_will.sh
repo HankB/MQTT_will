@@ -175,8 +175,7 @@ parse_args() {
                 ;;
             -t|--test)
                 shift
-                # shellcheck disable=SC1091 # this file isn't part of the project
-                . shunit2
+                exit
                 ;;
             -b|--broker)
                 shift
