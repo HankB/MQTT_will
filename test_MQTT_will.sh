@@ -16,5 +16,14 @@ test_connect_msg() {
     assertEquals "connect_msg" "$(connect_msg )" '{"t":1629312459, "host":"foo", "status": "connected" }'
 }
 
+test_update_msg() {
+    date() { # mock shell date command
+        echo "1629312459"
+    }
+    HOSTNAME="foo"
+    assertEquals "update_msg" "$(update_msg )" '{"t":1629312459, "host":"foo", "status": "still connected" }'
+}
+
+
 # shellcheck disable=SC1091 # this file isn't part of the project
-. shunit2
+source shunit2

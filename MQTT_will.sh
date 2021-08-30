@@ -35,14 +35,6 @@ update_msg() {
     echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"still connected\" }"|tr -d "\\n"
 }
 
-test_update_msg() {
-    date() { # mock shell date command
-        echo "1629312459"
-    }
-    HOSTNAME="foo"
-    assertEquals "update_msg" "$(update_msg )" '{"t":1629312459, "host":"foo", "status": "still connected" }'
-}
-
 # function to return lass will message, seconds since epoch, hostname and status
 # JSON format
 # Note: the "t" value will be the time the connection was established, now when it
@@ -155,6 +147,7 @@ test_process_args() {
 # exported to suppress shellcheck SC2034
 export broker="localhost"
 export interval=0
+export testing=0
 
 # parse arguments and dispatch
 parse_args() {
@@ -167,7 +160,7 @@ parse_args() {
                 ;;
             -t|--test)
                 shift
-                exit
+                testing=1
                 ;;
             -b|--broker)
                 shift
@@ -203,4 +196,7 @@ test_parse_args() {
 
 parse_args "$@"
 
-process
+if [ ! $testing ]
+then
+    process
+fi
