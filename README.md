@@ -37,12 +37,11 @@ Eventually `mosquitto` or `mosquitto-clients` may be used for testing.
 * `mosquitto-clients`
 
 ```text
-apt install shunit2 mosquitto
+apt install shunit2 shellcheck mosquitto
 apt install mosquitto-clients
 ```
 
 ## TODO
 
-* split out testing into a separate file(s)
 * Decide what to do about topic. Function like broker, connect_msg etc?
 * implement some processing tests.
