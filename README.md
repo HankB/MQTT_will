@@ -18,16 +18,23 @@ Some work to prove the capability was done in this project <https://github.com/H
 
 Using  `shellcheck` as a `bash` linter. Unit tests using `shunit12`. To run all unit tests
 
-
 ```text
 ./MQTT_will.sh -t
 ```
 
-Seems not possible at present to run selected tests with this structure (tests in same file as the code under test.)
+Seems not possible at present to run selected tests with this structure.
 
 ## requirements
 
-For testing `shunit2` and `mosquitto`. If tetsting can be done using a broker on another host `mosquitto-clients` is sufficient. To deploy, `mosquitto-clients` is sufficient.
+### Testing
+
+* `shunit2`. 
+
+Eventually `mosquitto` or `mosquitto-clients` may be used for testing. 
+
+### To deploy
+
+* `mosquitto-clients`
 
 ```text
 apt install shunit2 mosquitto
