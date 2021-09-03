@@ -16,10 +16,11 @@ Some work to prove the capability was done in this project <https://github.com/H
 
 ## Testing
 
-Using  `shellcheck` as a `bash` linter. Unit tests using `shunit12`. To run all unit tests
+Using  `shellcheck` as a `bash` linter. Unit tests using `shunit12`. To lint and run all unit tests
 
 ```text
-./MQTT_will.sh -t
+shellcheck -P ./ test_MQTT_will.sh
+./test_MQTT_will.sh
 ```
 
 Seems not possible at present to run selected tests with this structure.
