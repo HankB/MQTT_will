@@ -6,6 +6,7 @@ set -o pipefail
 set -o nounset
 ############### end of Boilerplate
 
+# shellcheck disable=SC1091 # this file isn't part of the project
 . ./MQTT_will.sh -t 
 
 test_connect_msg() {
@@ -79,19 +80,24 @@ EOF
 test_process_args() {
     # mock mosquitto_pub and sleep for test purposes
     mosquitto_pub() {
-        cat
-        echo $*
+        cat >/dev/null          # discard STDIN
+        echo "$*" >/dev/null    # discard args
     }
     sleep() {
-        echo sleeping $1
+        echo sleeping "$@"      # report args
         exit
     }
     process
+    # test default interval (0 = wait forever)
+    assertEquals "check update interval" "sleeping 86400" "$(sleep 86400)"
+    #assertEquals "check update interval" "sleeping 86400" "$(process)"
 }
 
 test_parse_args() {
     # first default values
+    # shellcheck disable=SC2154 # assigned in the source file
     assertEquals "broker" "$broker" "localhost"
+    # shellcheck disable=SC2154 # assigned in the source file
     assertEquals "interval" "$interval" 0
     parse_args "-b" "mqtt1"
     assertEquals "broker" "$broker" "mqtt1"
