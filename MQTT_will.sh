@@ -44,14 +44,6 @@ will_msg() {
     echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connection dropped\" }"|tr -d "\\n"
 }
 
-test_will_msg() {
-    date() { # mock shell date command
-        echo "1629312459"
-    }
-    HOSTNAME="foo"
-    assertEquals "will_msg" "$(will_msg )" '{"t":1629312459, "host":"foo", "status": "connection dropped" }'
-}
-
 # pull custom settings if provided
 read_custom_settings() {
     if [ -e ./custom_settings ]
@@ -59,49 +51,6 @@ read_custom_settings() {
     # shellcheck disable=SC1091 # this file isn't part of the project
     . ./custom_settings 
     fi
-}
-
-test_custom_settings() {
-    test_dir=test$$
-    mkdir $test_dir
-    cd $test_dir
-cat <<EOF >./custom_settings
-#!/usr/bin/env bash
-# Bash3 Boilerplate. Copyright (c) 2014, kvz.io
-
-set -o errexit
-set -o pipefail
-set -o nounset
-############### end of Boilerplate
-
-broker() {
-    echo "mqttbroker"|tr -d "\\\\n"    # use mqttbroker
-}
-
-connect_msg() {
-    echo "$(date +%s), foo, connected"|tr -d "\\\\n"
-}
-
-update_msg() {
-    echo "$(date +%s), foo, still connected"|tr -d "\\\\n"
-}
-
-will_msg() {
-    echo "$(date +%s), foo, gone"|tr -d "\\\\n"
-}
-
-EOF
-
-    read_custom_settings
-    assertEquals "broker" "$(broker )" "mqttbroker"
-    assertEquals "connect_msg" "$(connect_msg )" '1629312459, foo, connected'
-    assertEquals "update_msg" "$(update_msg )" '1629312459, foo, still connected'
-    assertEquals "will_msg" "$(will_msg )" '1629312459, foo, gone'
-
-    # cleanup
-    cd ..
-    rm -rf $test_dir
-
 }
 
 # actual processing
@@ -126,21 +75,6 @@ process() {
                     -h localhost \
                     --will-payload \"$(will_msg)\" \
                     --will-topic \"TEST/will\" -l
-}
-
-# mock mosquitto_pub and sleep for test purposes
-
-# test argument passing
-test_process_args() {
-    mosquitto_pub() {
-        cat
-        echo $*
-    }
-    sleep() {
-        echo sleeping $1
-        exit
-    }
-    process
 }
 
 # default values for some things provided as command line args
@@ -178,20 +112,6 @@ parse_args() {
                 ;;
         esac
     done
-}
-
-test_parse_args() {
-    # first default values
-    assertEquals "broker" "$broker" "localhost"
-    assertEquals "interval" "$interval" 0
-    parse_args "-b" "mqtt1"
-    assertEquals "broker" "$broker" "mqtt1"
-    parse_args "--broker" "mqtt2"
-    assertEquals "broker" "$broker" "mqtt2"
-    parse_args "-i" 3
-    assertEquals "interval" "$interval" 3
-    parse_args "--interval" 5
-    assertEquals "interval" "$interval" 5
 }
 
 parse_args "$@"
