@@ -25,6 +25,15 @@ Using  `shellcheck` as a `bash` linter. Unit tests using `shunit12`. To run all 
 
 Seems not possible at present to run selected tests with this structure (tests in same file as the code under test.)
 
+## requirements
+
+For testing `shunit2` and `mosquitto`. If tetsting can be done using a broker on another host `mosquitto-clients` is sufficient. To deploy, `mosquitto-clients` is sufficient.
+
+```text
+apt install shunit2 mosquitto
+apt install mosquitto-clients
+```
+
 ## TODO
 
 * split out testing into a separate file(s)
