@@ -6,7 +6,7 @@ set -o pipefail
 set -o nounset
 ############### end of Boilerplate
 
-# shellcheck disable=SC1091 # this file isn't part of the project
+# shellcheck disable=SC1091 # this file is otherwise tested
 . ./MQTT_will.sh -t 
 
 test_broker() {
