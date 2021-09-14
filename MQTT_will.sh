@@ -81,10 +81,10 @@ process() {
             fi
         done 
     ) | \
-    mosquitto_pub   -t TEST \
+    mosquitto_pub   -t CM/live \
                     -h localhost \
                     --will-payload "$(will_msg)" \
-                    --will-topic "TEST/will" -l
+                    --will-topic "CM/will" -l
 }
 
 # default values for some things provided as command line args
