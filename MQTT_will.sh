@@ -100,7 +100,7 @@ parse_args() {
         case $1 in
             -h|-\?|--help)
                 usage
-                shift
+                exit
                 ;;
             -t|--test)
                 shift
@@ -126,7 +126,7 @@ parse_args() {
 
 parse_args "$@"
 
-if [ ! $testing ]
+if [ $testing -eq 0 ]
 then
     process
 fi
