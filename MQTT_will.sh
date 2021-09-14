@@ -6,6 +6,21 @@ set -o pipefail
 set -o nounset
 ############### end of Boilerplate
 
+
+############### Instructions
+# 
+# target=hbarta@allred
+# scp MQTT_will.service MQTT_will.sh $target:/bin/
+# ssh $target
+# (edit custom_settings and service file)
+# sudo cp MQTT_will.service /etc/systemd/system
+# sudo systemctl daemon-reload
+# sudo cp MQTT_will.sh /usr/local/sbin
+# sudo systemctl status MQTT_will.service
+# sudo systemctl status MQTT_will.service
+#
+###############
+
 # usage ...
 usage() {
     echo "$0 [-h|-?|-t|[-b broker -i interval ]"
