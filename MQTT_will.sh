@@ -88,8 +88,8 @@ process() {
     ) | \
     mosquitto_pub   -t TEST \
                     -h localhost \
-                    --will-payload \"$(will_msg)\" \
-                    --will-topic \"TEST/will\" -l
+                    --will-payload "$(will_msg)" \
+                    --will-topic "TEST/will" -l
 }
 
 # default values for some things provided as command line args
