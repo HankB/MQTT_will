@@ -31,11 +31,6 @@ broker() {
     echo "localhost"|tr -d "\\n"    # default to localhost
 }
 
-test_broker() {
-    assertEquals "broker" "$(broker )" "localhost"
-}
-
-
 # function to return connect message, seconds since epoch, hostname and status
 # JSON format
 # e.g. {"t":1629312351, "host":"olive", "status": "connected" }

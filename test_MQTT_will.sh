@@ -9,6 +9,10 @@ set -o nounset
 # shellcheck disable=SC1091 # this file isn't part of the project
 . ./MQTT_will.sh -t 
 
+test_broker() {
+    assertEquals "broker" "$(broker )" "localhost"
+}
+
 test_connect_msg() {
     date() { # mock shell date command
         echo "1629312459"
