@@ -18,6 +18,7 @@ Half Baked.
 * implement some processing tests.
 * Provide a Systemd unit file.
 * Support non-anomyous connection
+* add cleanup to `test_MQTT_will.sh` to delete test directory.
 
 ## Motivation
 
