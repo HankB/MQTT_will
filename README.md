@@ -12,9 +12,6 @@ Half Baked.
 
 ## TODO
 
-* Decide what to do about topic. 
-    * Config function like broker?
-    * host name in topic? Or add to status messages.
 * implement some processing tests.
 * Provide a Systemd unit file.
 * Support non-anomyous connection
@@ -57,6 +54,22 @@ Seems not possible at present to run selected tests with this structure.
 ```text
 apt install shunit2 shellcheck mosquitto
 apt install mosquitto-clients
+```
+
+## Systemd unit
+
+```text
+sudo loginctl enable-linger username
+mkdir -p ~/.config/systemd/user/
+mkdir ~//MQTT_will
+mkdir -p ~/bin~
+cp MQTT_will.sh ~/bin/
+# cp custom_settings ~/bin/ if used
+cp MQTT_will.service ~/.config/systemd/user/
+systemctl --user status MQTT_will
+systemctl --user enable MQTT_will
+systemctl --user start MQTT_will
+systemctl --user status MQTT_will
 ```
 
 ## Errata
