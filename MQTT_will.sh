@@ -28,7 +28,7 @@ usage() {
 
 # function to return broker hostname
 get_broker() {
-    echo "localhost"|tr -d "\\n"    # default to localhost
+    echo "localhost"    # default to localhost
 }
 
 # function to return connect message, seconds since epoch, hostname and status

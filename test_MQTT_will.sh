@@ -51,19 +51,19 @@ set -o nounset
 ############### end of Boilerplate
 
 get_broker() {
-    echo "mqttbroker"|tr -d "\\\\n"    # use mqttbroker
+    echo "mqttbroker"    # use mqttbroker
 }
 
 connect_msg() {
-    echo "$(date +%s), foo, connected"|tr -d "\\\\n"
+    echo "$(date +%s), foo, connected"
 }
 
 update_msg() {
-    echo "$(date +%s), foo, still connected"|tr -d "\\\\n"
+    echo "$(date +%s), foo, still connected"
 }
 
 will_msg() {
-    echo "$(date +%s), foo, gone"|tr -d "\\\\n"
+    echo "$(date +%s), foo, gone"
 }
 
 EOF
