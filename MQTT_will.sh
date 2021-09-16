@@ -35,14 +35,14 @@ get_broker() {
 # JSON format
 # e.g. {"t":1629312351, "host":"olive", "status": "connected" }
 connect_msg() {
-    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connected\" }"
+    echo "{\"t\":$(date +%s), \"status\": \"connected\" }"
 }
 
 # function to return periodic status update message, seconds since epoch, hostname and status
 # JSON format
 # e.g. {"t":1629312351, "host":"olive", "status": "still connected" }
 update_msg() {
-    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"still connected\" }"
+    echo "{\"t\":$(date +%s), \"status\": \"still connected\" }"
 }
 
 # function to return lass will message, seconds since epoch, hostname and status
@@ -51,7 +51,7 @@ update_msg() {
 # has been detected that it has dropped.
 # e.g. {"t":1629312351, "host":"olive", "status": "connection dropped" }
 will_msg() {
-    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connection dropped\" }"
+    echo "{\"t\":$(date +%s), \"status\": \"connection dropped\" }"
 }
 
 # pull custom settings if provided
@@ -80,10 +80,10 @@ process() {
             fi
         done 
     ) | \
-    mosquitto_pub   -t CM/live \
+    mosquitto_pub   -t "CM/${HOSTNAME}/live" \
                     -h "$broker" \
                     --will-payload "$(will_msg)" \
-                    --will-topic "CM/will" -l
+                    --will-topic "CM/${HOSTNAME}/will" -l
 }
 
 # default values for some things provided as command line args

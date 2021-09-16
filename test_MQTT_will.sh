@@ -18,7 +18,7 @@ test_connect_msg() {
         echo "1629312459"
     }
     HOSTNAME="foo"
-    assertEquals "connect_msg" "$(connect_msg )" '{"t":1629312459, "host":"foo", "status": "connected" }'
+    assertEquals "connect_msg" "$(connect_msg )" '{"t":1629312459, "status": "connected" }'
 }
 
 test_update_msg() {
@@ -26,7 +26,7 @@ test_update_msg() {
         echo "1629312459"
     }
     HOSTNAME="foo"
-    assertEquals "update_msg" "$(update_msg )" '{"t":1629312459, "host":"foo", "status": "still connected" }'
+    assertEquals "update_msg" "$(update_msg )" '{"t":1629312459, "status": "still connected" }'
 }
 
 test_will_msg() {
@@ -34,7 +34,7 @@ test_will_msg() {
         echo "1629312459"
     }
     HOSTNAME="foo"
-    assertEquals "will_msg" "$(will_msg )" '{"t":1629312459, "host":"foo", "status": "connection dropped" }'
+    assertEquals "will_msg" "$(will_msg )" '{"t":1629312459, "status": "connection dropped" }'
 }
 
 test_custom_settings() {
