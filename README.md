@@ -58,3 +58,12 @@ Seems not possible at present to run selected tests with this structure.
 apt install shunit2 shellcheck mosquitto
 apt install mosquitto-clients
 ```
+
+## Errata
+
+This script does not provide user/password authentication. For MQTT 2.0 it may be necessary to add the following to `/etc/mosquitto/mosquitto.conf`
+
+```text
+listener 1883
+allow_anonymous true
+```
