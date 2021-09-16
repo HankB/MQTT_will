@@ -67,3 +67,4 @@ This script does not provide user/password authentication. For MQTT 2.0 it may b
 listener 1883
 allow_anonymous true
 ```
+`mosquitto_pub` and `mosquitto_pub` use `-h` to specify broker name. This script uses `-b` and uses `-h` for a Usage message"
