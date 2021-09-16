@@ -45,7 +45,7 @@ Seems not possible at present to run selected tests with this structure.
 
 ## requirements
 
-### Tor Testing
+### For Testing
 
 * `shunit2`
 * `mosquitto` and `mosquitto-clients` are be used test complete functionality. 
