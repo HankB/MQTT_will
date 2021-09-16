@@ -35,14 +35,14 @@ get_broker() {
 # JSON format
 # e.g. {"t":1629312351, "host":"olive", "status": "connected" }
 connect_msg() {
-    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connected\" }"|tr -d "\\n"
+    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connected\" }"
 }
 
 # function to return periodic status update message, seconds since epoch, hostname and status
 # JSON format
 # e.g. {"t":1629312351, "host":"olive", "status": "still connected" }
 update_msg() {
-    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"still connected\" }"|tr -d "\\n"
+    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"still connected\" }"
 }
 
 # function to return lass will message, seconds since epoch, hostname and status
@@ -51,14 +51,13 @@ update_msg() {
 # has been detected that it has dropped.
 # e.g. {"t":1629312351, "host":"olive", "status": "connection dropped" }
 will_msg() {
-    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connection dropped\" }"|tr -d "\\n"
+    echo "{\"t\":$(date +%s), \"host\":\"$HOSTNAME\", \"status\": \"connection dropped\" }"
 }
 
 # pull custom settings if provided
 read_custom_settings() {
     if [ -e ./custom_settings ]
     then
-    # shellcheck disable=SC1091 # this file isn't part of the project
     . ./custom_settings 
     fi
 }
@@ -66,23 +65,23 @@ read_custom_settings() {
 # actual processing
 process() {
     (
-        echo $(connect_msg); \
+        connect_msg; \
         while(:)
         do
-            if [ $interval -ne 0 ]
+            if [ "$interval" -ne 0 ]
             then
-                sleep $interval
-                echo $(update_msg)
+                sleep "$interval"
+               update_msg
             else
                 while true
                 do 
-                    sleep 86400; 
+                    sleep 86400
                 done; 
             fi
         done 
     ) | \
     mosquitto_pub   -t CM/live \
-                    -h $broker \
+                    -h "$broker" \
                     --will-payload "$(will_msg)" \
                     --will-topic "CM/will" -l
 }
