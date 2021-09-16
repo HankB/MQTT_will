@@ -61,11 +61,12 @@ apt install mosquitto-clients
 ```text
 sudo loginctl enable-linger username
 mkdir -p ~/.config/systemd/user/
-mkdir ~//MQTT_will
-mkdir -p ~/bin~
+mkdir ~/MQTT_will
+mkdir -p ~/bin
 cp MQTT_will.sh ~/bin/
-# cp custom_settings ~/bin/ if used
+# cp custom_settings ~/bin/ # if used, not currently working
 cp MQTT_will.service ~/.config/systemd/user/
+systemctl --user daemon-reload
 systemctl --user status MQTT_will
 systemctl --user enable MQTT_will
 systemctl --user start MQTT_will
