@@ -2,6 +2,23 @@
 
 Use MQTT last will and testament to monitor host up.
 
+## Status
+
+Half Baked.
+
+* Limited unit tests succeed.
+* Runs from command line (Ship it!)
+* requires that broker accept anonymous connections. (Not default for Mosquiqitto 2.0)
+
+## TODO
+
+* Decide what to do about topic. 
+    * Config function like broker?
+    * host name in topic? Or add to status messages.
+* implement some processing tests.
+* Provide a Systemd unit file.
+* Support non-anomyous connection
+
 ## Motivation
 
 I have several Raspberry Pis monitoring stuff for Homeassistant as well as a server and test server. Sometimes it takes too long for me to notice if one goes down or otherwise becomes unavailable. The MQTT last will and testament facility can be used to identify hosts that have stopped communicating (as long as the MQTT broker is still up.
@@ -16,7 +33,7 @@ Some work to prove the capability was done in this project <https://github.com/H
 
 ## Testing
 
-Using  `shellcheck` as a `bash` linter. Unit tests using `shunit12`. To lint and run all unit tests
+Using  `shellcheck` as a `bash` linter. Unit tests using `shunit2`. To lint and run all unit tests
 
 ```text
 shellcheck -P ./ test_MQTT_will.sh
@@ -27,11 +44,10 @@ Seems not possible at present to run selected tests with this structure.
 
 ## requirements
 
-### Testing
+### Tor Testing
 
-* `shunit2`. 
-
-Eventually `mosquitto` or `mosquitto-clients` may be used for testing. 
+* `shunit2`
+* `mosquitto` and `mosquitto-clients` are be used test complete functionality. 
 
 ### To deploy
 
@@ -41,8 +57,3 @@ Eventually `mosquitto` or `mosquitto-clients` may be used for testing.
 apt install shunit2 shellcheck mosquitto
 apt install mosquitto-clients
 ```
-
-## TODO
-
-* Decide what to do about topic. Function like broker, connect_msg etc?
-* implement some processing tests.
