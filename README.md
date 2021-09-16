@@ -9,6 +9,7 @@ Half Baked.
 * Limited unit tests succeed.
 * Runs from command line (Ship it!)
 * requires that broker accept anonymous connections. (Not default for Mosquiqitto 2.0)
+* Restart on boot (via Systemd) not presently working.
 
 ## TODO
 
