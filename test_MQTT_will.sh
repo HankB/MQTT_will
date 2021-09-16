@@ -10,7 +10,7 @@ set -o nounset
 . ./MQTT_will.sh -t 
 
 test_broker() {
-    assertEquals "broker" "$(broker )" "localhost"
+    assertEquals "broker" "$(get_broker )" "localhost"
 }
 
 test_connect_msg() {
@@ -50,7 +50,7 @@ set -o pipefail
 set -o nounset
 ############### end of Boilerplate
 
-broker() {
+get_broker() {
     echo "mqttbroker"|tr -d "\\\\n"    # use mqttbroker
 }
 
@@ -69,7 +69,7 @@ will_msg() {
 EOF
 
     read_custom_settings
-    assertEquals "broker" "$(broker )" "mqttbroker"
+    assertEquals "broker" "$(get_broker )" "mqttbroker"
     assertEquals "connect_msg" "$(connect_msg )" '1629312459, foo, connected'
     assertEquals "update_msg" "$(update_msg )" '1629312459, foo, still connected'
     assertEquals "will_msg" "$(will_msg )" '1629312459, foo, gone'

@@ -27,7 +27,7 @@ usage() {
 }
 
 # function to return broker hostname
-broker() {
+get_broker() {
     echo "localhost"|tr -d "\\n"    # default to localhost
 }
 
