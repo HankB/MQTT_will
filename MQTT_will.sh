@@ -82,7 +82,7 @@ process() {
         done 
     ) | \
     mosquitto_pub   -t CM/live \
-                    -h localhost \
+                    -h $broker \
                     --will-payload "$(will_msg)" \
                     --will-topic "CM/will" -l
 }
