@@ -60,7 +60,7 @@ apt install mosquitto-clients
 ## Systemd unit
 
 ```text
-sudo loginctl enable-linger username
+sudo loginctl enable-linger $USER
 mkdir -p ~/.config/systemd/user/
 mkdir ~/MQTT_will
 mkdir -p ~/bin
