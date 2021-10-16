@@ -11,6 +11,12 @@ Half Baked.
 * requires that broker accept anonymous connections. (Not default for Mosquiqitto 2.0)
 * Restart on boot (via Systemd) not presently working.
 
+At present, starts from `/etc/rc.local` using
+
+```text
+runuser -u hbarta $(sleep 10; cd /home/hbarta/MQTT_will; /home/hbarta/bin/MQTT_will.sh) 2>&1 > /tmp/rc.local.err &
+```
+
 ## TODO
 
 * implement some processing tests.

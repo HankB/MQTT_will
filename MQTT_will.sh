@@ -7,18 +7,22 @@ set -o nounset
 ############### end of Boilerplate
 
 
-############### Instructions
+############### Instructions (for installing to remote system)
 # 
-# target=hbarta@allred
-# scp MQTT_will.service MQTT_will.sh $target:/bin/
+# user=hbarta
+# remote_host=allred
+# target=$user@${remote_host}
+# scp MQTT_will.service.system MQTT_will.sh custom_settings ${target}:
 # ssh $target
+# mkdir -p /home/$USER/MQTT_will
+# mkdir -p /home/$USER/bin
 # (edit custom_settings and service file)
-# sudo cp MQTT_will.service /etc/systemd/system
+# mv custom_settings /home/$USER/MQTT_will
+# sudo cp MQTT_will.service.system /etc/systemd/system/MQTT_will.service
 # sudo systemctl daemon-reload
-# sudo cp MQTT_will.sh /usr/local/sbin
 # sudo systemctl status MQTT_will.service
-# sudo systemctl status MQTT_will.service
-#
+# sudo systemctl enable MQTT_will.service
+# sudo systemctl start MQTT_will.service
 ###############
 
 # usage ...
@@ -38,8 +42,8 @@ connect_msg() {
     echo "{\"t\":$(date +%s), \"status\": \"connected\" }"
 }
 
-# function to return periodic status update message, seconds since epoch, hostname and status
-# JSON format
+# function to return periodic status update message, seconds since epoch, 
+# hostname and status in JSON format
 # e.g. {"t":1629312351, "host":"olive", "status": "still connected" }
 update_msg() {
     echo "{\"t\":$(date +%s), \"status\": \"still connected\" }"

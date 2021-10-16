@@ -1,0 +1,18 @@
+[Unit]
+After=systemd-networkd-wait-online.service
+Wants=systemd-networkd-wait-online.service
+Description=expose host status via MQTT will.
+
+
+[Service]
+WorkingDirectory=/home/hbarta/MQTT_will
+ExecStart=/home/hbarta/bin/MQTT_will.sh
+Restart=always
+SyslogIdentifier=mqtt_will
+Environment=loc=/home/hbarta
+User=hbarta
+Group=hbarta
+
+
+[Install]
+WantedBy=multi-user.target
