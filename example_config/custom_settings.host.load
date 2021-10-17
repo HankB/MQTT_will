@@ -1,0 +1,10 @@
+# function to return broker hostname
+get_broker() {
+    echo "olive"    # default to localhost
+}
+
+# default update and with 15 minute load average added
+update_msg() {
+    echo "{\"t\":$(date +%s), \"status\": \"STILL connected\", \"load15\": $(cut -f 3 -d " " </proc/loadavg) }"
+}
+
