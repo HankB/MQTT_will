@@ -86,10 +86,10 @@ process() {
             fi
         done 
     ) | \
-    mosquitto_pub   -t "CM/${HOSTNAME}/live" \
+    mosquitto_pub   -t "CM/${HOSTNAME}/state" \
                     -h "$broker" \
                     --will-payload "$(will_msg)" \
-                    --will-topic "CM/${HOSTNAME}/will" -l
+                    --will-topic "CM/${HOSTNAME}/state" -l
 }
 
 # default values for some things provided as command line args
