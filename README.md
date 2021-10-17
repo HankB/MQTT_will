@@ -4,7 +4,7 @@ Use MQTT last will and testament to monitor host up.
 
 ## Status
 
-Half Baked.
+Usable.
 
 * Limited unit tests succeed.
 * Runs from command line (Ship it!)
