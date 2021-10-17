@@ -16,6 +16,7 @@ set -o nounset
 # ssh $target
 # mkdir -p /home/$USER/MQTT_will
 # mkdir -p /home/$USER/bin
+# mv MQTT_will.sh bin/
 # (edit custom_settings and service file)
 # mv custom_settings /home/$USER/MQTT_will
 # sudo cp MQTT_will.service.system /etc/systemd/system/MQTT_will.service
@@ -64,6 +65,7 @@ read_custom_settings() {
     then
     . ./custom_settings 
     fi
+    broker=$(get_broker)
 }
 
 # actual processing
@@ -92,7 +94,6 @@ process() {
 
 # default values for some things provided as command line args
 # exported to suppress shellcheck SC2034
-export broker="localhost"
 export interval=0
 export testing=0
 
@@ -127,9 +128,9 @@ parse_args() {
     done
 }
 
-parse_args "$@"
-
 if [ $testing -eq 0 ]
 then
+    read_custom_settings
+    parse_args "$@"     # cmd line args override custom settings
     process
 fi
