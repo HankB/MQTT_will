@@ -1,6 +1,13 @@
 # MQTT_will
 
-Use MQTT last will and testament to monitor host up.
+Use MQTT last will and testament to monitor host up. What it does:
+
+* Connect to an MQTT broker, specifying a will message and topic.
+* Send a "connect" message.
+* Optionally send periodic updates.
+* If the host goes away, the broker will publish the will message.
+
+By default it uses a topic `CM/<hostname>/NA/state` to match the format in use for home automation. The 'NA' would be location and is unused for this particular topic.
 
 ## Status
 
