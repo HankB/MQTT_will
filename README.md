@@ -48,6 +48,7 @@ Some work to prove the capability was done in this project <https://github.com/H
 Using  `shellcheck` as a `bash` linter. Unit tests using `shunit2`. To lint and run all unit tests
 
 ```text
+shellcheck -x  MQTT_will.sh
 shellcheck -P ./ test_MQTT_will.sh
 ./test_MQTT_will.sh
 ```

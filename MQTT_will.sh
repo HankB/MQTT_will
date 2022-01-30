@@ -52,7 +52,7 @@ update_msg() {
 
 # function to return lass will message, seconds since epoch, hostname and status
 # JSON format
-# Note: the "t" value will be the time the connection was established, now when it
+# Note: the "t" value will be the time the connection was established, not when it
 # has been detected that it has dropped.
 # e.g. {"t":1629312351, "host":"olive", "status": "connection dropped" }
 will_msg() {
@@ -71,9 +71,9 @@ read_custom_settings() {
 # wait for remote host to be available. At boot mosquitto_pub will
 # fail until the network is up
 wait_for_broker() {
-    while(! ping -c 1 $broker)
+    while(! ping -c 1 "$broker")
     do
-        echo waiting for $broker >>/tmp/wait_for_broker
+        echo waiting for "$broker" >>/tmp/wait_for_broker
         sleep 1
     done
 }
