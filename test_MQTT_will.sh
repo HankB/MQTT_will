@@ -6,6 +6,11 @@ set -o pipefail
 set -o nounset
 ############### end of Boilerplate
 
+# mock ping command
+ping () {
+    true
+}
+
 # shellcheck disable=SC1091 # this file is otherwise tested
 . ./MQTT_will.sh -t 
 
