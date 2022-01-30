@@ -13,21 +13,20 @@ By default it uses a topic `CM/<hostname>/NA/state` to match the format in use f
 
 Usable.
 
-* Limited unit tests succeed.
+* Limited unit tests do not succeed at present. Update to wait for successful ping of MQTT broker breaks this test.
 * Runs from command line (Ship it!)
 * requires that broker accept anonymous connections. (Not default for Mosquiqitto 2.0)
-* Restart on boot (via Systemd) not presently working.
-
-At present, starts from `/etc/rc.local` using
+* Restart on boot (via Systemd) not tested with latest update.
+* Starts from user crontab entry
 
 ```text
-runuser -u hbarta $(sleep 10; cd /home/hbarta/MQTT_will; /home/hbarta/bin/MQTT_will.sh) 2>&1 > /tmp/rc.local.err &
+@reboot /home/pi/bin/MQTT_will.sh -b mqtt -i 300 >/tmp/MQTT_will 2>&1
 ```
 
 ## TODO
 
 * implement some processing tests.
-* Provide a Systemd unit file.
+* Provide a working Systemd unit file.
 * Support non-anomyous connection
 * add cleanup to `test_MQTT_will.sh` to delete test directory.
 
