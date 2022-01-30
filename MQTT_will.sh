@@ -68,6 +68,16 @@ read_custom_settings() {
     broker=$(get_broker)
 }
 
+# wait for remote host to be available. At boot mosquitto_pub will
+# fail until the network is up
+wait_for_broker() {
+    while(! ping -c 1 $broker)
+    do
+        echo waiting for $broker >>/tmp/wait_for_broker
+        sleep 1
+    done
+}
+
 # actual processing
 process() {
     (
@@ -132,5 +142,6 @@ if [ $testing -eq 0 ]
 then
     read_custom_settings
     parse_args "$@"     # cmd line args override custom settings
+    wait_for_broker
     process
 fi
