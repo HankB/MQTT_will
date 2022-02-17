@@ -23,7 +23,7 @@ sudo apt install libpaho-mqtt-dev
 See [instructions for building the C++ library](Paho-C++-lib.md).
 
 ```text
-g++ -o MQTT_will MQTT_will.c++ -lpaho-mqttpp3 -lpaho-mqtt3as -lpthread
+g++ -o MQTT_will MQTT_will.cpp -lpaho-mqttpp3 -lpaho-mqtt3as -lpthread
 ```
 
 ## Test
