@@ -11,7 +11,11 @@ By default it uses a topic `CM/<hostname>/NA/state` to match the format in use f
 
 ## Status
 
-Usable.
+Usable, Unsatisfactory. ABANDONED.
+
+At present out of 10 hosts running this, only one shows the correct status on HomeAssistant. Most show "unknown" while 2 display the will message (even though they are still up.) The one that has the correct information was rebooted a little earlier. One booted a few minutes ago still displays the will message.
+
+Clearly this is not working as desired. With the decoupling of functionality between shell commands and the connection to the broker there may not be a way to address the issue. While the concept seems good, this implementation is going to be abandoned.
 
 * Limited unit tests do not succeed at present. Update to wait for successful ping of MQTT broker breaks this test.
 * Runs from command line (Ship it!)
@@ -96,4 +100,4 @@ listener 1883
 allow_anonymous true
 ```
 
-`mosquitto_pub` and `mosquitto_pub` use `-h` to specify broker name. This script uses `-b` and uses `-h` for a Usage message"
+`mosquitto_pub` and `mosquitto_sub` use `-h` to specify broker name. This script uses `-b` and uses `-h` for a Usage message"
