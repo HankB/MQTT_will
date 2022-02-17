@@ -1,0 +1,41 @@
+HA\/oak\/basement_frzr\/power
+HA\/oak\/basement_frzr\/power
+
+HA/oak/basement_frzr/power {"current": "1.853358", "volts": "123.366888", "watts": "132.546003", "t": 1643495700}
+
+
+{"current": "1.853358", "volts": "123.366888", "watts": "132.546003", "t": 1643495700}
+
+{"current": "1.853358", "volts": "123.366888", "watts": "132.546003", "t": 1643495700}
+
+
+
+
+2022-01-29 17:10:00 DEBUG (MainThread) [homeassistant.components.mqtt] Received message on HA/oak/kitchen/power: b'{"current": "0.084429", "volts": "125.317594", "watts": "2.514628", "t": 1643497800}'
+2022-01-29 17:10:00 DEBUG (MainThread) [homeassistant.components.mqtt] Received message on HA/oak/basement_frzr/power: b'{"current": "1.751520", "volts": "123.541255", "watts": "113.244260", "t": 1643497800}'
+
+
+HA/oak/basement_frzr/power {"current": "1.777816", "volts": "123.922733", "watts": "116.265613", "t": 1643496600}
+HA/oak/kitchen/power {"current": "0.085785", "volts": "125.796808", "watts": "2.570088", "t": 1643496600}
+
+
+
+@reboot cd /home/hbarta/MQTT_will; /home/hbarta/bin/MQTT_will.sh -b mqtt -i 300 >/tmp/MQTT_will 2>&1
+@reboot cd /home/pi/MQTT_will; /home/pi/bin/MQTT_will.sh -b mqtt -i 300 >/tmp/MQTT_will 2>&1
+
+user=pi
+user=hbarta
+host=sodus
+scp MQTT_will.sh example_config/custom_settings.host.load $user@$host:
+ssh $host
+ssh $user@$host
+
+mv MQTT_will.sh bin/
+mkdir MQTT_will
+mv custom_settings.host.load MQTT_will/custom_settings
+chmod +x MQTT_will/custom_settings
+sed -i s/STILL/$HOSTNAME/ MQTT_will/custom_settings
+cat MQTT_will/custom_settings
+vim MQTT_will/custom_settings
+crontab -e
+
