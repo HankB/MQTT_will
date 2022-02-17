@@ -1,13 +1,4 @@
-# MQTT_will
-
-Use MQTT last will and testament to monitor host up. What it does:
-
-* Connect to an MQTT broker, specifying a will message and topic.
-* Send a "connect" message.
-* Optionally send periodic updates.
-* If the host goes away, the broker will publish the will message.
-
-By default it uses a topic `CM/<hostname>/NA/state` to match the format in use for home automation. The 'NA' would be location and is unused for this particular topic.
+# MQTT_will in bash/mosquitto_pub
 
 ## Status
 
@@ -29,22 +20,10 @@ Clearly this is not working as desired. With the decoupling of functionality bet
 
 ## TODO
 
-* implement some processing tests.
+* <s>implement some processing tests.
 * Provide a working Systemd unit file.
 * Support non-anomyous connection
-* add cleanup to `test_MQTT_will.sh` to delete test directory.
-
-## Motivation
-
-I have several Raspberry Pis monitoring stuff for Homeassistant as well as a server and test server. Sometimes it takes too long for me to notice if one goes down or otherwise becomes unavailable. The MQTT last will and testament facility can be used to identify hosts that have stopped communicating (as long as the MQTT broker is still up.
-
-Some work to prove the capability was done in this project <https://github.com/HankB/Fun_with_MQTT>.
-
-## Plans
-
-* custom messages for startup, update and will.
-* run using systemd
-* options for repeat interval and host for MQTT broker.
+* add cleanup to `test_MQTT_will.sh` to delete test directory.</s>
 
 ## Testing
 
