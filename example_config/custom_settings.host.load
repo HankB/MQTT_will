@@ -1,6 +1,6 @@
 # function to return broker hostname
 get_broker() {
-    echo "olive"    # default to localhost
+    echo "mqtt"    # default to localhost
 }
 
 # default update and with 15 minute load average added
