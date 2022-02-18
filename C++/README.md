@@ -6,7 +6,7 @@ This portion of the code is derived from an example kindly provided by the Eclip
 
 ## Status
 
-None
+Example code added that includes MQTT publishing that works.
 
 ## Plan
 
@@ -23,7 +23,7 @@ sudo apt install libpaho-mqtt-dev
 See [instructions for building the C++ library](Paho-C++-lib.md).
 
 ```text
-g++ -o MQTT_will MQTT_will.cpp -lpaho-mqttpp3 -lpaho-mqtt3as -lpthread
+g++ -Wall -o MQTT_will MQTT_will.cpp -lpaho-mqttpp3 -lpaho-mqtt3as -lpthread
 ```
 
 ## Test
@@ -31,9 +31,10 @@ g++ -o MQTT_will MQTT_will.cpp -lpaho-mqttpp3 -lpaho-mqtt3as -lpthread
 Subscribe to local server
 
 ```text
-mosquitto_sub  -v -t \#
+mosquitto_sub  -v -t \# -h olive
 ```
-Execute the produced binaryu
+
+Execute the produced binary.
 
 ```text
 ./MQTT_will olive
