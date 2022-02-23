@@ -12,6 +12,7 @@
  *
  * Contributors:
  *    Ian Craggs - initial contribution
+ *    Hank Barta - mods for https://github.com/HankB/MQTT_will/tree/main/C
  *******************************************************************************/
 
 #include <stdio.h>
@@ -19,7 +20,7 @@
 #include <string.h>
 #include "MQTTClient.h"
 
-#define ADDRESS     "tcp://mqtt.eclipse.org:1883"
+#define ADDRESS     "tcp://olive:1883"
 #define CLIENTID    "ExampleClientPub"
 #define TOPIC       "MQTT Examples"
 #define PAYLOAD     "Hello World!"
@@ -32,6 +33,8 @@ int main(int argc, char* argv[])
     MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
     MQTTClient_message pubmsg = MQTTClient_message_initializer;
     MQTTClient_deliveryToken token;
+    MQTTClient_willOptions will_opts = MQTTClient_willOptions_initializer;
+
     int rc;
 
     if ((rc = MQTTClient_create(&client, ADDRESS, CLIENTID,
@@ -41,8 +44,15 @@ int main(int argc, char* argv[])
          exit(EXIT_FAILURE);
     }
 
+    will_opts.topicName = "will/topic";
+    will_opts.message = "another will message";
+    will_opts.retained = 0;
+    will_opts.qos = 0;
+    will_opts.struct_version = 0;
+
     conn_opts.keepAliveInterval = 20;
     conn_opts.cleansession = 1;
+    conn_opts.will = &will_opts;
     if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
     {
         printf("Failed to connect, return code %d\n", rc);
@@ -64,6 +74,8 @@ int main(int argc, char* argv[])
             (int)(TIMEOUT/1000), PAYLOAD, TOPIC, CLIENTID);
     rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
     printf("Message with delivery token %d delivered\n", token);
+
+    abort();
 
     if ((rc = MQTTClient_disconnect(client, 10000)) != MQTTCLIENT_SUCCESS)
     	printf("Failed to disconnect, return code %d\n", rc);
