@@ -24,3 +24,6 @@ cc -o MQTTClient_publish  -Wall MQTTClient_publish.c -lpaho-mqtt3cs
 cc -o MQTT_will -Wall MQTT_will.c -lpaho-mqtt3cs 
 ```
 
+## Errata
+
+Code that builds the topic with the host name may fail for ridiculously long hostnames (>1024).
