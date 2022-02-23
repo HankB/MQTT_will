@@ -18,13 +18,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "MQTTClient.h"
 
-#define ADDRESS     "tcp://olive:1883"
-#define CLIENTID    "ExampleClientPub"
+static const char broker[] = "olive";
+static const char client_prefix[] = "MQTT_will.";
+#define ID_LEN 30
+static char client_id[ID_LEN];
+static time_t t;
+
 #define TOPIC       "MQTT Examples"
 #define PAYLOAD     "Hello World!"
-#define QOS         1
+#define QOS         0
 #define TIMEOUT     10000L
 
 int main(int argc, char* argv[])
@@ -36,8 +41,10 @@ int main(int argc, char* argv[])
     MQTTClient_willOptions will_opts = MQTTClient_willOptions_initializer;
 
     int rc;
+    srand((unsigned) time(&t)); // seed RNG
+    snprintf(client_id, ID_LEN, "%s%8.8X", client_prefix, rand());
 
-    if ((rc = MQTTClient_create(&client, ADDRESS, CLIENTID,
+    if ((rc = MQTTClient_create(&client, broker, client_id,
         MQTTCLIENT_PERSISTENCE_NONE, NULL)) != MQTTCLIENT_SUCCESS)
     {
          printf("Failed to create client, return code %d\n", rc);
@@ -71,7 +78,7 @@ int main(int argc, char* argv[])
 
     printf("Waiting for up to %d seconds for publication of %s\n"
             "on topic %s for client with ClientID: %s\n",
-            (int)(TIMEOUT/1000), PAYLOAD, TOPIC, CLIENTID);
+            (int)(TIMEOUT/1000), PAYLOAD, TOPIC, client_id);
     rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
     printf("Message with delivery token %d delivered\n", token);
 
