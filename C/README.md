@@ -9,8 +9,8 @@ Bug in paho MQTT C++ library that truncates the will message to the first charac
 Proof of concept - modifications to provoke the broker to publish will message.
 
 * Connect with a will message
-* abort to avoid clean shutdown
-
+* ~abort to avoid clean shutdown~
+* Loop with a status message, `<ctrl>C` now triggers will message from broker.
 
 
 ## Starting point

@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <time.h>
 #include "MQTTClient.h"
+#include <stdbool.h>
 
 static const char broker[] = "olive";
 static const char client_prefix[] = "MQTT_will.";
@@ -101,11 +102,22 @@ int send_message(const char * msg_topic, const char * msg_payload)
 int main(int argc, char* argv[])
 {
     int rc;
+    time_t  sent_time;
 
     start_mqtt_connection( broker, "gone");
     send_message(topic, "here");
-    send_message(topic, "still");
-    abort(); // trigger broker to publish will message
+    sent_time = time(NULL);
+    while(true)
+    {
+        if(time(NULL) - sent_time > 5)
+        {
+            sent_time = time(NULL);
+            send_message(topic, "still");
+        }
+        sleep(1);
+        MQTTClient_yield();
+    }
+    //abort(); // trigger broker to publish will message
 
     if ((rc = MQTTClient_disconnect(client, 10000)) != MQTTCLIENT_SUCCESS)
     	printf("Failed to disconnect, return code %d\n", rc);
