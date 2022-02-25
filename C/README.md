@@ -11,6 +11,7 @@ Proof of concept - modifications to provoke the broker to publish will message.
 * Connect with a will message
 * ~abort to avoid clean shutdown~
 * Loop with a status message, `<ctrl>C` now triggers will message from broker.
+* Reconnect logic works with broker stopped and restarted.
 
 
 ## Starting point

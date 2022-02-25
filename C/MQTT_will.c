@@ -39,6 +39,11 @@ static const char connected_payload[] = "here";
 
 MQTTClient client;
 
+// forward declaration
+
+int send_message(const char * msg_topic, const char * msg_payload);
+
+
 int start_mqtt_connection( const char * broker, const char * will_msg)
 {
     MQTTClient_willOptions will_opts = MQTTClient_willOptions_initializer;
@@ -66,11 +71,15 @@ int start_mqtt_connection( const char * broker, const char * will_msg)
     conn_opts.keepAliveInterval = 20;
     conn_opts.cleansession = 1;
     conn_opts.will = &will_opts;
+
     if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
     {
         printf("Failed to connect, return code %d\n", rc);
          return rc;
     }
+
+    rc = send_message(topic, "here");
+
     return rc; // should be MQTTCLIENT_SUCCESS
 }
 
@@ -104,20 +113,31 @@ int main(int argc, char* argv[])
     int rc;
     time_t  sent_time;
 
-    start_mqtt_connection( broker, "gone");
-    send_message(topic, "here");
+    // connect
+    while( start_mqtt_connection( broker, "gone") != MQTTCLIENT_SUCCESS)
+    {
+        sleep(5);       // delay and try again
+    }
     sent_time = time(NULL);
+
     while(true)
     {
         if(time(NULL) - sent_time > 5)
         {
-            sent_time = time(NULL);
-            send_message(topic, "still");
+            while ( send_message(topic, "still") != MQTTCLIENT_SUCCESS)
+            {
+                // send, retry connect if send does not succeed
+                while( start_mqtt_connection( broker, "gone") != MQTTCLIENT_SUCCESS)
+                {
+                    sleep(5);       // delay and try again
+                }
+                break;
+            }
+        sent_time = time(NULL);
         }
-        sleep(1);
-        MQTTClient_yield();
+        sleep(1);           // pause one second
+        MQTTClient_yield(); // process MQTT stuff
     }
-    //abort(); // trigger broker to publish will message
 
     if ((rc = MQTTClient_disconnect(client, 10000)) != MQTTCLIENT_SUCCESS)
     	printf("Failed to disconnect, return code %d\n", rc);
