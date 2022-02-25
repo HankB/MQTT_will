@@ -39,8 +39,9 @@ static const char connected_payload[] = "here";
 
 MQTTClient client;
 
-// forward declaration
+#define chatty 0    // control console output
 
+// forward declaration
 int send_message(const char * msg_topic, const char * msg_payload);
 
 
@@ -59,7 +60,7 @@ int start_mqtt_connection( const char * broker, const char * will_msg)
     if ((rc = MQTTClient_create(&client, broker, client_id,
         MQTTCLIENT_PERSISTENCE_NONE, NULL)) != MQTTCLIENT_SUCCESS)
     {
-         printf("Failed to create client, return code %d\n", rc);
+         if(chatty) printf("Failed to create client, return code %d\n", rc);
          return rc;
     }
     will_opts.topicName = topic;
@@ -74,7 +75,7 @@ int start_mqtt_connection( const char * broker, const char * will_msg)
 
     if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
     {
-        printf("Failed to connect, return code %d\n", rc);
+        if(chatty) printf("Failed to connect, return code %d\n", rc);
          return rc;
     }
 
@@ -95,15 +96,15 @@ int send_message(const char * msg_topic, const char * msg_payload)
     pubmsg.retained = 0;
     if ((rc = MQTTClient_publishMessage(client, msg_topic, &pubmsg, &token)) != MQTTCLIENT_SUCCESS)
     {
-         printf("Failed to publish message, return code %d\n", rc);
+         if (chatty) printf("Failed to publish message, return code %d\n", rc);
          return rc;
     }
 
-    printf("Waiting for up to %d seconds for publication of %s\n"
+    if(chatty) printf("Waiting for up to %d seconds for publication of %s\n"
             "on topic %s for client with ClientID: %s\n",
             (int)(TIMEOUT/1000), connected_payload, topic, client_id);
     rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
-    printf("Message with delivery token %d delivered\n", token);
+    if(chatty) printf("Message with delivery token %d delivered\n", token);
     return rc; // should be MQTTCLIENT_SUCCESS
 }
 
@@ -140,7 +141,9 @@ int main(int argc, char* argv[])
     }
 
     if ((rc = MQTTClient_disconnect(client, 10000)) != MQTTCLIENT_SUCCESS)
-    	printf("Failed to disconnect, return code %d\n", rc);
+    {
+    	if(chatty) printf("Failed to disconnect, return code %d\n", rc);
+    }
     MQTTClient_destroy(&client);
     return rc;
 }
