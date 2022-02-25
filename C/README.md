@@ -20,6 +20,10 @@ Use the `MQTTClient_publish.c` that comes with the C library - the simplest one 
 ## Building
 
 ```text
+sudo dnf install paho-c-devel
+```
+
+```text
 cc -o MQTTClient_publish  -Wall MQTTClient_publish.c -lpaho-mqtt3cs 
 cc -o MQTT_will -Wall MQTT_will.c -lpaho-mqtt3cs 
 ```
