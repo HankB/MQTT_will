@@ -38,7 +38,7 @@ static const char connected_payload[] = "here";
 
 MQTTClient client;
 
-void start_mqtt_connection( const char * broker, const char * will_msg)
+int start_mqtt_connection( const char * broker, const char * will_msg)
 {
     MQTTClient_willOptions will_opts = MQTTClient_willOptions_initializer;
     MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
@@ -54,7 +54,7 @@ void start_mqtt_connection( const char * broker, const char * will_msg)
         MQTTCLIENT_PERSISTENCE_NONE, NULL)) != MQTTCLIENT_SUCCESS)
     {
          printf("Failed to create client, return code %d\n", rc);
-         exit(EXIT_FAILURE);
+         return rc;
     }
     will_opts.topicName = topic;
     will_opts.message = will_msg;
@@ -68,11 +68,12 @@ void start_mqtt_connection( const char * broker, const char * will_msg)
     if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
     {
         printf("Failed to connect, return code %d\n", rc);
-        exit(EXIT_FAILURE);
+         return rc;
     }
+    return rc; // should be MQTTCLIENT_SUCCESS
 }
 
-void send_message(const char * msg_topic, const char * msg_payload)
+int send_message(const char * msg_topic, const char * msg_payload)
 {
     MQTTClient_message pubmsg = MQTTClient_message_initializer;
     MQTTClient_deliveryToken token;
@@ -85,7 +86,7 @@ void send_message(const char * msg_topic, const char * msg_payload)
     if ((rc = MQTTClient_publishMessage(client, msg_topic, &pubmsg, &token)) != MQTTCLIENT_SUCCESS)
     {
          printf("Failed to publish message, return code %d\n", rc);
-         exit(EXIT_FAILURE);
+         return rc;
     }
 
     printf("Waiting for up to %d seconds for publication of %s\n"
@@ -93,6 +94,7 @@ void send_message(const char * msg_topic, const char * msg_payload)
             (int)(TIMEOUT/1000), connected_payload, topic, client_id);
     rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
     printf("Message with delivery token %d delivered\n", token);
+    return rc; // should be MQTTCLIENT_SUCCESS
 }
 
 
