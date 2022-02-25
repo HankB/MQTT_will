@@ -34,6 +34,9 @@ static const char topic_format[] = "CM/%s/NA/state";
 #define HOSTNAME_LEN    1024
 static char hostname[HOSTNAME_LEN];
 static const char connected_payload[] = "here";
+#define PAYLOAD_LEN    1024
+static char payload_buffer[PAYLOAD_LEN];
+
 #define QOS         0
 #define TIMEOUT     10000L
 
@@ -44,7 +47,14 @@ MQTTClient client;
 // forward declaration
 int send_message(const char * msg_topic, const char * msg_payload);
 
-
+// Build payload message, JSON format including timestamp and status
+// ee.g. '{ "t": nnnnnn, "status": "status" }'
+const char* build_payload(char buf[], uint buf_len, const char* status)
+{
+    snprintf(buf, buf_len, "{ \"t\": %ld, \"status\": \"%s\" }", 
+            time(NULL), status);
+    return buf;
+}
 int start_mqtt_connection( const char * broker, const char * will_msg)
 {
     MQTTClient_willOptions will_opts = MQTTClient_willOptions_initializer;
@@ -79,7 +89,7 @@ int start_mqtt_connection( const char * broker, const char * will_msg)
          return rc;
     }
 
-    rc = send_message(topic, "here");
+    rc = send_message(topic, build_payload(payload_buffer, PAYLOAD_LEN, "here"));
 
     return rc; // should be MQTTCLIENT_SUCCESS
 }
@@ -94,7 +104,8 @@ int send_message(const char * msg_topic, const char * msg_payload)
     pubmsg.payloadlen = (int)strlen(msg_payload);
     pubmsg.qos = QOS;
     pubmsg.retained = 0;
-    if ((rc = MQTTClient_publishMessage(client, msg_topic, &pubmsg, &token)) != MQTTCLIENT_SUCCESS)
+    if ((rc = MQTTClient_publishMessage(client, msg_topic, &pubmsg, &token))
+            != MQTTCLIENT_SUCCESS)
     {
          if (chatty) printf("Failed to publish message, return code %d\n", rc);
          return rc;
@@ -115,7 +126,9 @@ int main(int argc, char* argv[])
     time_t  sent_time;
 
     // connect
-    while( start_mqtt_connection( broker, "gone") != MQTTCLIENT_SUCCESS)
+    while( start_mqtt_connection( broker, 
+                build_payload(payload_buffer, PAYLOAD_LEN, "gone"))
+            != MQTTCLIENT_SUCCESS)
     {
         sleep(5);       // delay and try again
     }
@@ -125,10 +138,14 @@ int main(int argc, char* argv[])
     {
         if(time(NULL) - sent_time > 5)
         {
-            while ( send_message(topic, "still") != MQTTCLIENT_SUCCESS)
+            while ( send_message(topic,
+                        build_payload(payload_buffer, PAYLOAD_LEN, "still"))
+                    != MQTTCLIENT_SUCCESS)
             {
                 // send, retry connect if send does not succeed
-                while( start_mqtt_connection( broker, "gone") != MQTTCLIENT_SUCCESS)
+                while( start_mqtt_connection( broker,
+                            build_payload(payload_buffer, PAYLOAD_LEN, "gone"))
+                        != MQTTCLIENT_SUCCESS)
                 {
                     sleep(5);       // delay and try again
                 }
