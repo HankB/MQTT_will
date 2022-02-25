@@ -70,28 +70,19 @@ void start_mqtt_connection( const char * broker, const char * will_msg)
         printf("Failed to connect, return code %d\n", rc);
         exit(EXIT_FAILURE);
     }
-    
 }
 
-int main(int argc, char* argv[])
+void send_message(const char * msg_topic, const char * msg_payload)
 {
-    //MQTTClient client;
-    //MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
     MQTTClient_message pubmsg = MQTTClient_message_initializer;
     MQTTClient_deliveryToken token;
-    //MQTTClient_willOptions will_opts = MQTTClient_willOptions_initializer;
-
     int rc;
 
-    start_mqtt_connection( broker, "bye");
-
-    //abort(); // trigger broker to publish will message
-
-    pubmsg.payload = (void*)connected_payload;
-    pubmsg.payloadlen = (int)strlen(connected_payload);
+    pubmsg.payload = (void*)msg_payload;
+    pubmsg.payloadlen = (int)strlen(msg_payload);
     pubmsg.qos = QOS;
     pubmsg.retained = 0;
-    if ((rc = MQTTClient_publishMessage(client, topic, &pubmsg, &token)) != MQTTCLIENT_SUCCESS)
+    if ((rc = MQTTClient_publishMessage(client, msg_topic, &pubmsg, &token)) != MQTTCLIENT_SUCCESS)
     {
          printf("Failed to publish message, return code %d\n", rc);
          exit(EXIT_FAILURE);
@@ -102,7 +93,17 @@ int main(int argc, char* argv[])
             (int)(TIMEOUT/1000), connected_payload, topic, client_id);
     rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
     printf("Message with delivery token %d delivered\n", token);
+}
 
+
+int main(int argc, char* argv[])
+{
+    int rc;
+
+    start_mqtt_connection( broker, "gone");
+    send_message(topic, "here");
+    send_message(topic, "still");
+    abort(); // trigger broker to publish will message
 
     if ((rc = MQTTClient_disconnect(client, 10000)) != MQTTCLIENT_SUCCESS)
     	printf("Failed to disconnect, return code %d\n", rc);
