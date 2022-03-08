@@ -23,6 +23,8 @@
 #include "MQTTClient.h"
 #include <stdbool.h>
 
+#include "MQTT_getopt.h"
+
 static const char broker[] = "olive";
 static const char client_prefix[] = "MQTT_will.";
 #define ID_LEN 30
