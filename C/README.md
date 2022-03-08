@@ -22,11 +22,28 @@ Use the `MQTTClient_publish.c` that comes with the C library - the simplest one 
 
 ```text
 sudo dnf install paho-c-devel
+sudo apt install libpaho-mqtt-dev
 ```
 
 ```text
 cc -o MQTT_will -Wall MQTT_will.c -lpaho-mqtt3cs 
 ```
+
+### R-Pi OS 10
+
+Need to build the paho library <https://github.com/eclipse/paho.mqtt.c> Most of the requirements listed below are for Debian packages.
+
+```text
+apt install libssl-dev
+apt-get install build-essential gcc make cmake cmake-gui cmake-curses-gui
+apt-get install fakeroot fakeroot devscripts dh-make lsb-release
+apt-get install libssl-dev
+apt-get install doxygen graphviz
+sudo apt install ninja-build
+
+git clone https://github.com/eclipse/paho.mqtt.c.git
+cd paho.mqtt.c
+
 
 ## Errata
 
