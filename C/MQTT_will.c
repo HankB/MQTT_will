@@ -23,7 +23,7 @@
 #include "MQTTClient.h"
 #include <stdbool.h>
 
-static const char broker[] = "olive";
+static const char broker[] = "mqtt";
 static const char client_prefix[] = "MQTT_will.";
 #define ID_LEN 30
 static char client_id[ID_LEN];
@@ -136,7 +136,7 @@ int main(int argc, char* argv[])
 
     while(true)
     {
-        if(time(NULL) - sent_time > 5)
+        if(time(NULL) - sent_time > 15*60)
         {
             while ( send_message(topic,
                         build_payload(payload_buffer, PAYLOAD_LEN, "still"))
