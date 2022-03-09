@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 /*
 * Shared stuff
 */
@@ -12,3 +14,4 @@ typedef struct
 
 void usage(const char* progname);
 int parse_args(int argc, char **argv, MQTT_options *opts);
+int get_extra(const char *cmd, char *buff, size_t buff_len);

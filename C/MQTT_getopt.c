@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
-#include <stdbool.h>
 #include <memory.h>
 
-#include "MQTT_getopt.h"
+#include "MQTT_will.h"
 
 /* copied from
 https://www.gnu.org/software/libc/manual/html_node/Getopt-Long-Option-Example.html
