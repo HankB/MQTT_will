@@ -12,7 +12,7 @@ Proof of concept - modifications to provoke the broker to publish will message.
 * ~abort to avoid clean shutdown~
 * Loop with a status message, `<ctrl>C` now triggers will message from broker.
 * Reconnect logic works with broker stopped and restarted.
-
+* Some command line options provided, `extra` not fully implemented.
 
 ## Starting point
 

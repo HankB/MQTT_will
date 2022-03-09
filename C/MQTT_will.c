@@ -25,7 +25,6 @@
 
 #include "MQTT_getopt.h"
 
-static const char broker[] = "olive";
 static const char client_prefix[] = "MQTT_will.";
 #define ID_LEN 30
 static char client_id[ID_LEN];
@@ -44,7 +43,7 @@ static char payload_buffer[PAYLOAD_LEN];
 
 MQTTClient client;
 
-#define chatty 0    // control console output
+static bool chatty=false;    // control console output
 
 // forward declaration
 int send_message(const char * msg_topic, const char * msg_payload);
@@ -57,6 +56,7 @@ const char* build_payload(char buf[], uint buf_len, const char* status)
             time(NULL), status);
     return buf;
 }
+
 int start_mqtt_connection( const char * broker, const char * will_msg)
 {
     MQTTClient_willOptions will_opts = MQTTClient_willOptions_initializer;
@@ -127,8 +127,15 @@ int main(int argc, char* argv[])
     int rc;
     time_t  sent_time;
 
+    MQTT_options        opts;
+    if(parse_args(argc, argv, &opts) != 0) {
+        usage(argv[0]);
+        exit(-1);
+    }
+    chatty = opts.verbose;
+
     // connect
-    while( start_mqtt_connection( broker, 
+    while( start_mqtt_connection( opts.broker, 
                 build_payload(payload_buffer, PAYLOAD_LEN, "gone"))
             != MQTTCLIENT_SUCCESS)
     {
@@ -138,14 +145,14 @@ int main(int argc, char* argv[])
 
     while(true)
     {
-        if(time(NULL) - sent_time > 5)
+        if(time(NULL) - sent_time > opts.interval)
         {
             while ( send_message(topic,
                         build_payload(payload_buffer, PAYLOAD_LEN, "still"))
                     != MQTTCLIENT_SUCCESS)
             {
                 // send, retry connect if send does not succeed
-                while( start_mqtt_connection( broker,
+                while( start_mqtt_connection( opts.broker,
                             build_payload(payload_buffer, PAYLOAD_LEN, "gone"))
                         != MQTTCLIENT_SUCCESS)
                 {
