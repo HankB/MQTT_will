@@ -2,7 +2,14 @@
 
 ## Motivation 
 
-Bug in paho MQTT C++ library that truncates the will message to the first character.
+Bug in paho MQTT C++ library that truncates the will message to the first character. Not present in the C library.
+
+## Direction
+
+This is very much tailored/specific to my needs and wants. Is there benefit to making it more general in order to be more widely useful? IOW
+
+* Provide command line (or other) options for the topic
+* Provide command line (or other) options for the hello, status update and will messages?
 
 ## Status
 
@@ -12,7 +19,7 @@ Proof of concept - modifications to provoke the broker to publish will message.
 * ~abort to avoid clean shutdown~
 * Loop with a status message, `<ctrl>C` now triggers will message from broker.
 * Reconnect logic works with broker stopped and restarted.
-
+* Some command line options provided, `extra` not fully implemented.
 
 ## Starting point
 
@@ -26,7 +33,7 @@ sudo apt install libpaho-mqtt-dev
 ```
 
 ```text
-cc -o MQTT_will -Wall MQTT_will.c -lpaho-mqtt3cs 
+cc -o MQTT_will -Wall MQTT_will.c MQTT_getopt.c -lpaho-mqtt3cs 
 ```
 
 ### R-Pi OS 10
@@ -43,7 +50,31 @@ sudo apt install ninja-build
 
 git clone https://github.com/eclipse/paho.mqtt.c.git
 cd paho.mqtt.c
+```
 
+Apparently didn't capture the rest. :(
+
+## Usage
+
+Install on a target machine in some convenient location and add an `@reboot` cron job to start this off. It could also be run as a Systemd service but that is not provided at this time.
+
+One way to use this is to combine it with other publishing requirements. For example this is intended to use on a Raspberry Pi that is collecting and publishing sensor information and the sensor information can be provided by a program provided using the `-extra` option option under development. The command provided wil be executed and its output captured and inserted into the JSON payload. Example output might look like
+
+```text
+"uptime": "232008", "temp": 68.3, "press": 991.6, "humid": 31.2
+```
+
+And would then be inserted into the LWT message
+
+```text
+{ "t": 1646841182, "status": "still" }
+```
+
+And result in
+
+```text
+{ "t": 1646841182, "status": "still",  "uptime": 232008, "temp": 68.3, "press": 991.6, "humid": 31.2 }
+```
 
 ## Errata
 

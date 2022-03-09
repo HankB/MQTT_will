@@ -21,9 +21,9 @@
 #include <unistd.h>
 #include <time.h>
 #include "MQTTClient.h"
-#include <stdbool.h>
 
-static const char broker[] = "mqtt";
+#include "MQTT_will.h"
+
 static const char client_prefix[] = "MQTT_will.";
 #define ID_LEN 30
 static char client_id[ID_LEN];
@@ -42,20 +42,29 @@ static char payload_buffer[PAYLOAD_LEN];
 
 MQTTClient client;
 
-#define chatty 0    // control console output
+static bool chatty=false;    // control console output
 
 // forward declaration
 int send_message(const char * msg_topic, const char * msg_payload);
 
 // Build payload message, JSON format including timestamp and status
-// ee.g. '{ "t": nnnnnn, "status": "status" }'
-const char* build_payload(char buf[], uint buf_len, const char* status)
+// e.g. '{ "t": nnnnnn, "status": "status" }' 
+const char* build_payload(char buf[], uint buf_len, const char* status, const char * extra)
 {
+    if(extra != NULL && strlen(extra) > 0)
+    {
+    snprintf(buf, buf_len, "{ \"t\": %ld, \"status\": \"%s\", %s }", 
+            time(NULL), status, extra);
+    }
+    else
+    {
     snprintf(buf, buf_len, "{ \"t\": %ld, \"status\": \"%s\" }", 
             time(NULL), status);
+    }
     return buf;
 }
-int start_mqtt_connection( const char * broker, const char * will_msg)
+
+int start_mqtt_connection( const char * broker, const char * will_msg, const char * first_payload)
 {
     MQTTClient_willOptions will_opts = MQTTClient_willOptions_initializer;
     MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
@@ -89,7 +98,7 @@ int start_mqtt_connection( const char * broker, const char * will_msg)
          return rc;
     }
 
-    rc = send_message(topic, build_payload(payload_buffer, PAYLOAD_LEN, "here"));
+    rc = send_message(topic, first_payload);
 
     return rc; // should be MQTTCLIENT_SUCCESS
 }
@@ -119,35 +128,54 @@ int send_message(const char * msg_topic, const char * msg_payload)
     return rc; // should be MQTTCLIENT_SUCCESS
 }
 
+static const size_t extra_buf_len = 1024;
 
 int main(int argc, char* argv[])
 {
     int rc;
     time_t  sent_time;
+    char extra_buf[extra_buf_len];
+
+    MQTT_options        opts;
+    if(parse_args(argc, argv, &opts) != 0) {
+        usage(argv[0]);
+        exit(-1);
+    }
+    chatty = opts.verbose; // global - Ugh!
+
+    extra_buf[0] = '\0';    // null terminate
+    if( opts.extra != NULL && strlen(opts.extra) > 0)
+        get_extra(opts.extra, extra_buf, extra_buf_len);
 
     // connect
-    while( start_mqtt_connection( broker, 
-                build_payload(payload_buffer, PAYLOAD_LEN, "gone"))
+    while( start_mqtt_connection( opts.broker, "gone",
+                build_payload(payload_buffer, PAYLOAD_LEN, "here", extra_buf))
             != MQTTCLIENT_SUCCESS)
     {
         sleep(5);       // delay and try again
+        if( opts.extra != NULL && strlen(opts.extra) > 0)
+            get_extra(opts.extra, extra_buf, extra_buf_len);
     }
     sent_time = time(NULL);
 
     while(true)
     {
-        if(time(NULL) - sent_time > 15*60)
+        if(time(NULL) - sent_time > opts.interval)
         {
+            if( opts.extra != NULL && strlen(opts.extra) > 0)
+                get_extra(opts.extra, extra_buf, extra_buf_len);
             while ( send_message(topic,
-                        build_payload(payload_buffer, PAYLOAD_LEN, "still"))
+                        build_payload(payload_buffer, PAYLOAD_LEN, "still", extra_buf))
                     != MQTTCLIENT_SUCCESS)
             {
                 // send, retry connect if send does not succeed
-                while( start_mqtt_connection( broker,
-                            build_payload(payload_buffer, PAYLOAD_LEN, "gone"))
+                while( start_mqtt_connection( opts.broker, "gone",
+                            build_payload(payload_buffer, PAYLOAD_LEN, "here", extra_buf))
                         != MQTTCLIENT_SUCCESS)
                 {
                     sleep(5);       // delay and try again
+                    if( opts.extra != NULL && strlen(opts.extra) > 0)
+                        get_extra(opts.extra, extra_buf, extra_buf_len);
                 }
                 break;
             }
