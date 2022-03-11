@@ -25,3 +25,12 @@ hbarta@olive:~$ free -m|head -2 | tail -1|awk '{print int(100*$3/$2)}'
 65
 hbarta@olive:~$ 
 ```
+
+# from ... CPU temperature
+
+```text
+[hbarta@kapok C]$ cat /sys/class/thermal/thermal_zone0/temp
+49000
+[hbarta@kapok C]$ </sys/class/thermal/thermal_zone0/temp awk '{print $1/1000}'
+51
+[hbarta@kapok C]$ 
