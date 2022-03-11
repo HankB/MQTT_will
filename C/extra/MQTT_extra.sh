@@ -7,4 +7,4 @@ uptime=$(awk '{printf("%d:%02d:%02d\n",($1/60/60/24),($1/60/60%24),($1/60%60))}'
 mem_pct=$(free -m|head -2 | tail -1|awk '{print int(100*$3/$2)}')
 CPU_temp=$(</sys/class/thermal/thermal_zone0/temp awk '{print $1/1000}')
 FS_pct=$(df --output=pcent /|tail -1|tr -d "[ %]")
-echo " \"uptime\":\"$uptime\", \"CPU_pct\":$CPU_pct, \"mem_pct\":$mem_pct, \"CPU_temp\":$CPU_temp, \"FS_pct\":$FS_pct"
+echo " \"uptime\":\"$uptime\", \"CPU_pct\":$CPU_pct, \"mem_pct\":$mem_pct, \"CPU_temp\":$CPU_temp, \"FS_pct\":$FS_pct"|tr -d "\n"
