@@ -2,7 +2,7 @@
 
 This is just a convenient place to save notes and scripts to be used for the "extra" commands that MQTT_will supports.
 
-For example, uptime as dsdd:yyt:mm
+For example, uptime as ddd:yy:mm
 
 ```text
 hbarta@olive:~$ awk '{printf("%d:%02d:%02d\n",($1/60/60/24),($1/60/60%24),($1/60%60))}' /proc/uptime
@@ -10,11 +10,11 @@ hbarta@olive:~$ awk '{printf("%d:%02d:%02d\n",($1/60/60/24),($1/60/60%24),($1/60
 hbarta@olive:~$
 ```
 
-from the package `sysstat`, extract idle time
+from the package `sysstat` package, extract idle time, calculate CPU usage
 
 ```text
-hbarta@olive:~$ mpstat 1 1|tail -1 | awk '{print $12}'
-94.47
+hbarta@olive:~$ mpstat 1 1|tail -1 | awk '{print 100-$12}'
+0.5
 hbarta@olive:~$ 
 ```
 
