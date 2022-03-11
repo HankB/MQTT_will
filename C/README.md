@@ -33,7 +33,7 @@ sudo apt install libpaho-mqtt-dev
 ```
 
 ```text
-cc -o MQTT_will -Wall MQTT_will.c MQTT_getopt.c -lpaho-mqtt3cs 
+cc -o MQTT_will -Wall MQTT_will.c MQTT_getopt.c MQTT_extra.c -lpaho-mqtt3cs 
 ```
 
 ### R-Pi OS 10
