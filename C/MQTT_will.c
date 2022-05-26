@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
         get_extra(opts.extra, extra_buf, extra_buf_len);
 
     // connect
-    while( start_mqtt_connection( opts.broker, "gone",
+    while( start_mqtt_connection( opts.broker, "{ \"state\": \"gone\", \"t\": 0 }",
                 build_payload(payload_buffer, PAYLOAD_LEN, "here", extra_buf))
             != MQTTCLIENT_SUCCESS)
     {
