@@ -6,53 +6,12 @@
 # - copy binary and extra script (which may vary by host)
 # And don't forget to deal with overlayfs on Raspberry Pi's
 # run with .e.g.
-#   ansible-playbook deploy-MQTT_will.yml -i olive, \
+#   ansible-playbook deploy-MQTT_will.yml -i olive, -K \
 #   [ -e alt_extra=MWTT_extra-someother.sh]
-# Not sure why the comma is there but it matters.
+# Not sure why the comma is there but it matters.    tasks:
 
   - name: deploy MQTT_will app to a host
     hosts: all
 
     tasks:
-    - name: list exe
-      shell: ls -l ~/bin/MQTT_will
-      register: mqtt_will_there
-      ignore_errors: yes
-
-    - name: report results
-      debug: var=mqtt_will_there
-
-    - name: install required libraries
-      become: yes
-      apt:
-        cache_valid_time: 3600
-        install_recommends: no
-        pkg: libpaho-mqtt1.3
-        state: present
-
-      register: SW_install
-
-    - name: kill a running MQTT_will
-      shell: killall --quiet MQTT_will
-      ignore_errors: yes
-    
-    - name: verify that user ~/bin dir exists
-      file:
-        path: ~/bin
-        state: directory
-
-    - name: copy binary and shell 
-      copy: 
-        src: "{{item}}"
-        dest: ~/bin
-        mode: u+rwx
-      with_items:
-        - MQTT_will
-        - extra/{{alt_extra | default ('MQTT_extra.sh')}}
-
-    - name: Add a cron job to run this
-      cron:
-        name: run MQTT_will
-        special_time: reboot
-        job: "/home/hbarta/bin/MQTT_will -b mqtt -i 900 -e /home/hbarta/bin/{{alt_extra | default ('MQTT_extra.sh')}}"
-
+      - include: deploy-MQTT_will-tasks.yml
