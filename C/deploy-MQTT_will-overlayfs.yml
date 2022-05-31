@@ -1,0 +1,24 @@
+---
+
+# Ansible tasks
+# - kill MQTT_will if already running
+# - verify that libpaho-mqtt1.3 is installed
+# - copy binary and extra script (which may vary by host)
+# And don't forget to deal with overlayfs on Raspberry Pi's
+# run with .e.g.
+#   ansible-playbook deploy-MQTT_will.yml -i olive, -K \
+#   [ -e alt_extra=MWTT_extra-someother.sh]
+# Not sure why the comma is there but it matters. 
+
+# This variant works with Pis that employ the overlayfs and will
+# disable that, reboot, deploy, enable overlayfs, reboot
+# It requires that https://github.com/HankB/Ansible be installed 
+# at the same level as this repo.
+
+  - name: deploy MQTT_will app to a host
+    hosts: all
+
+    tasks:
+      - include: ../../Ansible/Pi/overlayfs-off-tasks.yml
+      - include: deploy-MQTT_will-tasks.yml
+      - include: ../../Ansible/Pi/overlayfs-on-tasks.yml
