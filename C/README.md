@@ -54,7 +54,9 @@ cd paho.mqtt.c
 
 Apparently didn't capture the rest. :(
 
-## Usage
+## Usage / deploying via Ansdible
+
+Work on the Ansibl;e playbooks is in progress.
 
 Install on a target machine in some convenient location and add an `@reboot` cron job to start this off. It could also be run as a Systemd service but that is not provided at this time.
 
