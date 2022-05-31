@@ -15,8 +15,10 @@
         install_recommends: no
         pkg: libpaho-mqtt1.3
         state: present
-
       register: SW_install
+    
+    - name: report install results
+      debug: var=SW_install
 
     - name: kill a running MQTT_will
       shell: killall --quiet MQTT_will
