@@ -1,7 +1,8 @@
 ---
 
     - name: list exe
-      shell: ls -l ~/bin/MQTT_will
+      shell: ls -l /home/$USER/bin/MQTT_will
+      become: # SSH user
       register: mqtt_will_there
       ignore_errors: yes
 
@@ -9,7 +10,6 @@
       debug: var=mqtt_will_there
 
     - name: install required libraries
-      become: yes
       apt:
         cache_valid_time: 3600
         install_recommends: no
@@ -21,24 +21,28 @@
       debug: var=SW_install
 
     - name: kill a running MQTT_will
+      become: # SSH user
       shell: killall --quiet MQTT_will
       ignore_errors: yes
     
     - name: verify that user ~/bin dir exists
+      become: # SSH user
       file:
-        path: ~/bin
+        path: /home/$USER/bin
         state: directory
 
     - name: copy binary and shell 
+      become: # SSH user
       copy: 
         src: "{{item}}"
-        dest: ~/bin
+        dest: /home/$USER/bin
         mode: u+rwx
       with_items:
         - MQTT_will
         - extra/{{alt_extra | default ('MQTT_extra.sh')}}
 
     - name: Add a cron job to run this
+      become: # SSH user
       cron:
         name: run MQTT_will
         special_time: reboot
