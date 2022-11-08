@@ -10,10 +10,13 @@
       debug: var=mqtt_will_there
 
     - name: install required libraries
+      become: yes
       apt:
         cache_valid_time: 3600
         install_recommends: no
-        pkg: libpaho-mqtt1.3
+        pkg:
+        - libpaho-mqtt1.3
+        - mpstat
         state: present
       register: SW_install
     
