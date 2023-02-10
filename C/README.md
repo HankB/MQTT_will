@@ -16,10 +16,10 @@ This is very much tailored/specific to my needs and wants. Is there benefit to m
 Proof of concept - modifications to provoke the broker to publish will message.
 
 * Connect with a will message
-* ~abort to avoid clean shutdown~
 * Loop with a status message, `<ctrl>C` now triggers will message from broker.
-* Reconnect logic works with broker stopped and restarted.
-* Some command line options provided, `extra` not fully implemented.
+* Reconnect logic works with broker stopped and restarted and network interruptions.
+* Some command line options provided, `extra` implemented and working as tested.
+* Ansible playbook provided for easier deployment.
 
 ## Starting point
 
