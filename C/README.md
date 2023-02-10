@@ -82,7 +82,7 @@ This has been developed primarily for use with my small herd of Raspberry Pis, s
 
 (`Ansible` should probably be a submodule of `MQTT_will` and will probably be there some day.) The `Ansible` project can be found at <https://github.com/HankB/Ansible>
 
-### **Caution** which binary gets installed?
+### *Caution* which binary gets installed?
 
 The Ansible playbook will install the binary found (and typically) built on the host architecture. If the architecture does not match the target host, it will not work. There is no checking for this.
 
