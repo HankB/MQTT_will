@@ -16,7 +16,7 @@
         install_recommends: no
         pkg:
         - libpaho-mqtt1.3
-        - mpstat
+        - sysstat
         state: present
       register: SW_install
     
