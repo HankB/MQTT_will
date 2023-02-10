@@ -56,17 +56,47 @@ Apparently didn't capture the rest. :(
 
 ## Usage / deploying via Ansdible
 
-Work on the Ansibl;e playbooks is in progress.
+### Ansible
+An Ansible playbook has seen light testing. (It worked at least once!) The command for a single host (e.g. `dorman`) would be
+
+```text
+ansible-playbook deploy-MQTT_will.yml -K -i dorman,
+```
+
+If the `overlayfs` finesystem has been deployed on the Raspberry Pi Target, the following command should work.
+
+```text
+ansible-playbook deploy-MQTT_will-overlayfs.yml -K -i dorman,
+```
+
+This has been developed primarily for use with my small herd of Raspberry Pis, some of which use the R-Ri OS readonly filesystem (`overlayfs`) so it provides support for installing on a Raspberry Pi that is so configured. There are three playbooks.
+
+`deploy-MQTT_will-tasks.yml` which performs the desired installation steps.  
+`deploy-MQTT_will.yml` invokes `deploy-MQTT_will-tasks.yml` to perform the tasks on a host which is not configured for `overlayfs`.  
+`deploy-MQTT_will-overlayfs.yml` invokes `deploy-MQTT_will-tasks.yml` to perform the tasks on a host which *is* configured for `overlayfs`.  This requires another project that has the playbooks that enable and disable the `overlayfs` as needed. The directory structure is
+
+```text
+.../somedir/MQTT_will/
+.../somedir/Ansible/
+```
+
+(`Ansible` should probably be a submodule of `MQTT_will` and will probably be there some day.) The `Ansible` project can be found at <https://github.com/HankB/Ansible>
+
+### **Caution** which binary gets installed?
+
+The Ansible playbook will install the binary found (and typically) built on the host architecture. If the architecture does not match the target host, it will not work. There is no checking for this.
+
+### Manual installation
 
 Install on a target machine in some convenient location and add an `@reboot` cron job to start this off. It could also be run as a Systemd service but that is not provided at this time.
 
-One way to use this is to combine it with other publishing requirements. For example this is intended to use on a Raspberry Pi that is collecting and publishing sensor information and the sensor information can be provided by a program provided using the `-extra` option option under development. The command provided wil be executed and its output captured and inserted into the JSON payload. Example output might look like
+One way to use this is to combine it with other publishing requirements. For example this is intended to use on a Raspberry Pi that is collecting and publishing sensor information and the sensor information can be provided by a program provided using the `-extra` option. The command provided will be executed and its output captured and inserted into the JSON payload. Example output from the "extra" program might look like
 
 ```text
 "uptime": "232008", "temp": 68.3, "press": 991.6, "humid": 31.2
 ```
 
-And would then be inserted into the LWT message
+And would then be inserted into the LWT update message
 
 ```text
 { "t": 1646841182, "status": "still" }
