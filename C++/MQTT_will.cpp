@@ -26,20 +26,20 @@ https://github.com/eclipse/paho.mqtt.cpp/blob/2ff3d155dcd10564f1816675789284b4ef
 
 using namespace std;
 
-const string DFLT_SERVER_ADDRESS	{ "tcp://localhost:1883" };
-const string CLIENT_ID				{ "paho_cpp_async_publish" };
-//const string PERSIST_DIR			{ "./persist" };
+const string DFLT_SERVER_ADDRESS{"tcp://localhost:1883"};
+const string CLIENT_ID{"paho_cpp_async_publish"};
+// const string PERSIST_DIR			{ "./persist" };
 
-const string TOPIC { "hello" };
+const string TOPIC{"hello"};
 
-const char* PAYLOAD1 = "Hello World!";
-const char* PAYLOAD2 = "Hi there!";
-const char* PAYLOAD3 = "Is anyone listening?";
-const char* PAYLOAD4 = "Someone is always listening.";
+const char *PAYLOAD1 = "Hello World!";
+const char *PAYLOAD2 = "Hi there!";
+const char *PAYLOAD3 = "Is anyone listening?";
+const char *PAYLOAD4 = "Someone is always listening.";
 
-const char* LWT_PAYLOAD = "dropped";
+const char *LWT_PAYLOAD = "dropped";
 
-const int  QOS = 1;
+const int QOS = 1;
 
 const auto TIMEOUT = std::chrono::seconds(10);
 
@@ -76,12 +76,13 @@ protected:
 	void on_failure(const mqtt::token &tok) override
 	{
 		cout << "\tListener failure for token: "
-			<< tok.get_message_id() << endl;
+			 << tok.get_message_id() << endl;
 	}
 
-	void on_success(const mqtt::token& tok) override {
+	void on_success(const mqtt::token &tok) override
+	{
 		cout << "\tListener success for token: "
-			<< tok.get_message_id() << endl;
+			 << tok.get_message_id() << endl;
 	}
 };
 
@@ -94,12 +95,14 @@ class delivery_action_listener : public action_listener
 {
 	atomic<bool> done_;
 
-	void on_failure(const mqtt::token& tok) override {
+	void on_failure(const mqtt::token &tok) override
+	{
 		action_listener::on_failure(tok);
 		done_ = true;
 	}
 
-	void on_success(const mqtt::token& tok) override {
+	void on_success(const mqtt::token &tok) override
+	{
 		action_listener::on_success(tok);
 		done_ = true;
 	}
@@ -109,18 +112,16 @@ public:
 	bool is_done() const { return done_; }
 };
 
-
-
-int main (int argc, char *argv[])
-{ 
-    cout << "hello world" << endl;
+int main(int argc, char *argv[])
+{
+	cout << "hello world" << endl;
 	// A client that just publishes normally doesn't need a persistent
 	// session or Client ID unless it's using persistence, then the local
 	// library requires an ID to identify the persistence files.
 	// HB: Note - no current plan to use persistence
 
-	string	address  = (argc > 1) ? string(argv[1]) : DFLT_SERVER_ADDRESS,
-			clientID = (argc > 2) ? string(argv[2]) : CLIENT_ID;
+	string address = (argc > 1) ? string(argv[1]) : DFLT_SERVER_ADDRESS,
+		   clientID = (argc > 2) ? string(argv[2]) : CLIENT_ID;
 
 	cout << "Initializing for server '" << address << "'..." << endl;
 	mqtt::async_client client(address, clientID);
@@ -143,7 +144,8 @@ int main (int argc, char *argv[])
 
 	cout << "  ...OK" << endl;
 
-	try {
+	try
+	{
 		cout << "\nConnecting..." << endl;
 		mqtt::token_ptr conntok = client.connect(connOpts);
 		cout << "Waiting for the connection..." << endl;
@@ -165,7 +167,7 @@ int main (int argc, char *argv[])
 		pubtok = client.publish(TOPIC, PAYLOAD2, strlen(PAYLOAD2), QOS, false);
 		cout << "  ...with token: " << pubtok->get_message_id() << endl;
 		cout << "  ...for message with " << pubtok->get_message()->get_payload().size()
-			<< " bytes" << endl;
+			 << " bytes" << endl;
 		pubtok->wait_for(TIMEOUT);
 		cout << "  ...OK" << endl;
 
@@ -185,7 +187,8 @@ int main (int argc, char *argv[])
 		pubmsg = mqtt::make_message(TOPIC, PAYLOAD4);
 		client.publish(pubmsg, nullptr, deliveryListener);
 
-		while (!deliveryListener.is_done()) {
+		while (!deliveryListener.is_done())
+		{
 			this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
 		cout << "OK" << endl;
@@ -203,9 +206,10 @@ int main (int argc, char *argv[])
 		client.disconnect()->wait();
 		cout << "  ...OK" << endl;
 	}
-	catch (const mqtt::exception& exc) {
+	catch (const mqtt::exception &exc)
+	{
 		cerr << exc.what() << endl;
 		return 1;
 	}
- 	return 0;
+	return 0;
 }
