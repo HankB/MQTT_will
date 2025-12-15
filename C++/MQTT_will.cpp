@@ -3,7 +3,7 @@
 
 #include "mqtt/async_client.h"
 
-/* Now with example heavily cribbed from 
+/* Now with example heavily cribbed from
 https://github.com/eclipse/paho.mqtt.cpp/blob/2ff3d155dcd10564f1816675789284b4efd79eb7/src/samples/async_consume.cpp
 */
 
@@ -51,15 +51,17 @@ const auto TIMEOUT = std::chrono::seconds(10);
 class callback : public virtual mqtt::callback
 {
 public:
-	void connection_lost(const string& cause) override {
+	void connection_lost(const string &cause) override
+	{
 		cout << "\nConnection lost" << endl;
 		if (!cause.empty())
 			cout << "\tcause: " << cause << endl;
 	}
 
-	void delivery_complete(mqtt::delivery_token_ptr tok) override {
+	void delivery_complete(mqtt::delivery_token_ptr tok) override
+	{
 		cout << "\tDelivery complete for token: "
-			<< (tok ? tok->get_message_id() : -1) << endl;
+			 << (tok ? tok->get_message_id() : -1) << endl;
 	}
 };
 
@@ -71,7 +73,8 @@ public:
 class action_listener : public virtual mqtt::iaction_listener
 {
 protected:
-	void on_failure(const mqtt::token& tok) override {
+	void on_failure(const mqtt::token &tok) override
+	{
 		cout << "\tListener failure for token: "
 			<< tok.get_message_id() << endl;
 	}
@@ -125,10 +128,18 @@ int main (int argc, char *argv[])
 	callback cb;
 	client.set_callback(cb);
 
+	/*
 	auto connOpts = mqtt::connect_options_builder()
-		.clean_session()
-		.will(mqtt::message(TOPIC, LWT_PAYLOAD, QOS))
-		.finalize();
+						.clean_session()
+						.will(mqtt::message(TOPIC, LWT_PAYLOAD, QOS))
+						.finalize();
+	*/
+
+	// fix per https://github.com/eclipse-paho/paho.mqtt.cpp/issues/378#issuecomment-1457407820
+	auto connOpts = mqtt::connect_options_builder()
+						.clean_session()
+						.will(mqtt::message(TOPIC, LWT_PAYLOAD, strlen(LWT_PAYLOAD), QOS, /*retained*/ true))
+						.finalize();
 
 	cout << "  ...OK" << endl;
 
@@ -185,6 +196,8 @@ int main (int argc, char *argv[])
 		if (!toks.empty())
 			cout << "Error: There are pending delivery tokens!" << endl;
 
+		// timeout to allow <ctrl>C to stop the program
+		std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 		// Disconnect
 		cout << "\nDisconnecting..." << endl;
 		client.disconnect()->wait();
